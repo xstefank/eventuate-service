@@ -5,7 +5,6 @@ package org.learn.eventuate.coreapi
 data class ProductInfo(val productId: String = "", val comment: String = "", val price: Int = 0)
 
 
-class FileOrderCommand(val orderId: String, val productInfo : ProductInfo)
 class OrderFiledEvent(val orderId: String, val productInfo : ProductInfo)
 class OrderCompletedEvent(val orderId: String, val productInfo: ProductInfo)
 
