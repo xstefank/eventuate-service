@@ -3,7 +3,7 @@ package org.learn.eventuate.coreapi
 import org.learn.eventuate.event.OrderEvent
 
 
-//model
+//domain
 data class ProductInfo(val productId: String = "", val comment: String = "", val price: Int = 0)
 
 
