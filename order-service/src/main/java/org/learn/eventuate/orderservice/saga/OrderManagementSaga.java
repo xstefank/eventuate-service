@@ -5,8 +5,10 @@ import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.domain.service.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +23,9 @@ public class OrderManagementSaga {
     private String orderId;
     private ProductInfo productInfo;
 
+    @Autowired
+    private ShipmentService shipmentService;
+
     @EventHandlerMethod
     public void handle(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
         OrderFiledEvent event = dispatchedEvent.getEvent();
@@ -28,6 +33,8 @@ public class OrderManagementSaga {
 
         orderId = event.getOrderId();
         productInfo = event.getProductInfo();
+
+        shipmentService.requestShipment(orderId, productInfo);
 
 //        //request shipment
 //        log.info("sending PrepareShipmentCommand");
