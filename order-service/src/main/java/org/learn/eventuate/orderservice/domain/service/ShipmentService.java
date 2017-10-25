@@ -1,7 +1,7 @@
 package org.learn.eventuate.orderservice.domain.service;
 
 import org.learn.eventuate.coreapi.ProductInfo;
-import org.learn.eventuate.orderservice.OrderServiceProperties;
+import org.learn.eventuate.orderservice.config.OrderServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;

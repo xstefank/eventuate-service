@@ -1,10 +1,10 @@
 package org.learn.eventuate.orderservice.saga;
 
-import io.eventuate.DispatchedEvent;
-import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
-import org.learn.eventuate.coreapi.OrderFiledEvent;
+import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.command.OrderSagaCommand;
+import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.service.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EventSubscriber(id = "orderManagementSagaEvents")
-public class OrderManagementSaga {
+public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggregate<OrderSagaAggregate, OrderSagaCommand> {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderManagementSaga.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(OrderSagaAggregate.class.getSimpleName());
 
     private final OrderProcessing orderProcessing = new OrderProcessing();
     private final OrderCompensationProcessing compensationProcessing = new OrderCompensationProcessing();
@@ -26,9 +26,8 @@ public class OrderManagementSaga {
     @Autowired
     private ShipmentService shipmentService;
 
-    @EventHandlerMethod
-    public void handle(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
-        OrderFiledEvent event = dispatchedEvent.getEvent();
+
+    public void apply(StartOrderSagaCommand event) {
         log.info("STARTING SAGA - " + event.getOrderId());
 
         orderId = event.getOrderId();

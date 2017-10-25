@@ -1,4 +1,4 @@
-package org.learn.eventuate.orderservice;
+package org.learn.eventuate.orderservice.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
