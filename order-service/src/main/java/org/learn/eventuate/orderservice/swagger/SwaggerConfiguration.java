@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.learn.eventuate.orderservice"))
+                .apis(RequestHandlerSelectors.basePackage("org.learn.eventuate"))
                 .build()
                 .pathMapping("/")
                 .genericModelSubstitutes(ResponseEntity.class, CompletableFuture.class)

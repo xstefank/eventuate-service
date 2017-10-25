@@ -22,7 +22,7 @@ public class ShipmentService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public void requestShipment(String orderId, ProductInfo productInfo) {
+    public void requestShipment(String sagaId, ProductInfo productInfo) {
         final String url = properties.getShipmentUrl();
         System.out.println(url);
 

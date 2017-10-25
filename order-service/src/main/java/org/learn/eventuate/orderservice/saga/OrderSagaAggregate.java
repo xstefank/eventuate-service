@@ -4,8 +4,10 @@ import io.eventuate.EventSubscriber;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.command.OrderSagaCommand;
+import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.service.ShipmentService;
+import org.learn.eventuate.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,21 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     private final OrderProcessing orderProcessing = new OrderProcessing();
     private final OrderCompensationProcessing compensationProcessing = new OrderCompensationProcessing();
 
-    private String orderId;
+    private String id;
     private ProductInfo productInfo;
 
     @Autowired
     private ShipmentService shipmentService;
 
 
-    public void apply(StartOrderSagaCommand event) {
-        log.info("STARTING SAGA - " + event.getOrderId());
+    public void process(StartOrderSagaCommand command) {
+        id = Util.generateId();
+        log.info("STARTING SAGA - " + id);
 
-        orderId = event.getOrderId();
-        productInfo = event.getProductInfo();
 
-        shipmentService.requestShipment(orderId, productInfo);
+        productInfo = command.getProductInfo();
+
+        shipmentService.requestShipment(id, productInfo);
 
 //        //request shipment
 //        log.info("sending PrepareShipmentCommand");
@@ -45,13 +48,12 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
     }
 
-//    @SagaEventHandler(associationProperty = "orderId")
-//    public void on(ShipmentPreparedEvent event) {
-//        log.info("on ShipmentPreparedEvent");
-//        orderProcessing.setShipmentProcessed(true);
-//
+    public void process(ProcessShipmentCommand command) {
+        log.info("received ProcessShipmentCommand for saga " + id);
+        orderProcessing.setShipmentProcessed(true);
+
 //        checkSagaCompleted();
-//    }
+    }
 //
 //    @SagaEventHandler(associationProperty = "orderId")
 //    public void on(InvoicePreparedEvent event) {
