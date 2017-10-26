@@ -1,11 +1,15 @@
 package org.learn.eventuate.orderservice.saga;
 
+import io.eventuate.Event;
 import io.eventuate.EventSubscriber;
+import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.command.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
+import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
+import org.learn.eventuate.orderservice.domain.model.OrderInfo;
 import org.learn.eventuate.orderservice.domain.service.ShipmentService;
 import org.learn.eventuate.util.Util;
 import org.slf4j.Logger;
@@ -13,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-@EventSubscriber(id = "orderManagementSagaEvents")
+import java.util.List;
+
 public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggregate<OrderSagaAggregate, OrderSagaCommand> {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSagaAggregate.class.getSimpleName());
@@ -25,18 +29,18 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     private String id;
     private ProductInfo productInfo;
 
-    @Autowired
-    private ShipmentService shipmentService;
 
 
-    public void process(StartOrderSagaCommand command) {
+
+    public List<Event> process(StartOrderSagaCommand command) {
         id = Util.generateId();
         log.info("STARTING SAGA - " + id);
 
-
         productInfo = command.getProductInfo();
 
-        shipmentService.requestShipment(id, productInfo);
+        OrderInfo orderInfo = new OrderInfo(id, productInfo);
+
+//        shipmentService.requestShipment(id, productInfo);
 
 //        //request shipment
 //        log.info("sending PrepareShipmentCommand");
@@ -46,6 +50,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 //        log.info("sending PrepareInvoiceCommand");
 //        commandGateway.send(new PrepareInvoiceCommand(orderId, productInfo));
 
+        return EventUtil.events(new ShipmentRequestedEvent(orderInfo));
     }
 
     public void process(ProcessShipmentCommand command) {
@@ -53,6 +58,13 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         orderProcessing.setShipmentProcessed(true);
 
 //        checkSagaCompleted();
+    }
+
+
+
+    //required by eventuate
+    public void apply(ShipmentRequestedEvent event) {
+        log.info(String.format("Shipment for order {0} has been requested", id));
     }
 //
 //    @SagaEventHandler(associationProperty = "orderId")
