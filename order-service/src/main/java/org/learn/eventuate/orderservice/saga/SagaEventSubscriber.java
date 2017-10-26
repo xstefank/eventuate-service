@@ -37,6 +37,6 @@ public class SagaEventSubscriber {
     @EventHandlerMethod
     public void onShipmentRequestedEvent(DispatchedEvent<ShipmentRequestedEvent> dispatchedEvent) {
         log.info("on ShipmentRequestedEvent");
-        shipmentService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getOrderInfo());
+        shipmentService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
     }
 }

@@ -2,7 +2,6 @@ package org.learn.eventuate.orderservice.domain.service;
 
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.config.OrderServiceProperties;
-import org.learn.eventuate.orderservice.domain.model.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
@@ -23,8 +22,8 @@ public class ShipmentService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public void requestShipment(String sagaId, OrderInfo productInfo) {
-        final String url = properties.getShipmentUrl();
+    public void requestShipment(String sagaId, ProductInfo productInfo) {
+        final String url = properties.getShipmentUrl() + "/test";
         System.out.println(url);
 
         String result = restTemplate.getForObject(url, String.class);

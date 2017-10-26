@@ -70,7 +70,7 @@ services:
   shipment-service:
     build: ./shipment-service
     ports:
-      - "8081:8081"
+      - "8081:8080"
     volumes:
       - ./build/libs:/app
     links:

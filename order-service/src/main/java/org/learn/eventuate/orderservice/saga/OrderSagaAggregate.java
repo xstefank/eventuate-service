@@ -1,7 +1,6 @@
 package org.learn.eventuate.orderservice.saga;
 
 import io.eventuate.Event;
-import io.eventuate.EventSubscriber;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
@@ -9,13 +8,9 @@ import org.learn.eventuate.orderservice.command.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
-import org.learn.eventuate.orderservice.domain.model.OrderInfo;
-import org.learn.eventuate.orderservice.domain.service.ShipmentService;
 import org.learn.eventuate.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -38,8 +33,6 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
         productInfo = command.getProductInfo();
 
-        OrderInfo orderInfo = new OrderInfo(id, productInfo);
-
 //        shipmentService.requestShipment(id, productInfo);
 
 //        //request shipment
@@ -50,7 +43,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 //        log.info("sending PrepareInvoiceCommand");
 //        commandGateway.send(new PrepareInvoiceCommand(orderId, productInfo));
 
-        return EventUtil.events(new ShipmentRequestedEvent(orderInfo));
+        return EventUtil.events(new ShipmentRequestedEvent(productInfo));
     }
 
     public void process(ProcessShipmentCommand command) {

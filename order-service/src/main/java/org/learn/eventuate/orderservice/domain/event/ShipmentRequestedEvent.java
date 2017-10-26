@@ -1,18 +1,18 @@
 package org.learn.eventuate.orderservice.domain.event;
 
 import lombok.NoArgsConstructor;
-import org.learn.eventuate.orderservice.domain.model.OrderInfo;
+import org.learn.eventuate.coreapi.ProductInfo;
 
 @NoArgsConstructor
 public class ShipmentRequestedEvent implements OrderSagaEvent {
 
-    private OrderInfo orderInfo;
+    private ProductInfo productInfo;
 
-    public ShipmentRequestedEvent(OrderInfo orderInfo) {
-        this.orderInfo = orderInfo;
+    public ShipmentRequestedEvent(ProductInfo productInfo) {
+        this.productInfo = productInfo;
     }
 
-    public OrderInfo getOrderInfo() {
-        return orderInfo;
+    public ProductInfo getProductInfo() {
+        return productInfo;
     }
 }
