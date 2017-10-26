@@ -1,5 +1,6 @@
 include 'service-model'
 include 'order-service'
+include 'shipment-service'
 
 rootProject.name = 'eventuate-service'
 
