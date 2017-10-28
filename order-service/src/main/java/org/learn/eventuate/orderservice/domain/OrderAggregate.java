@@ -36,4 +36,9 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
         orderId = event.getOrderId();
     }
 
+    public void apply(OrderCompletedEvent event) {
+        log.info(String.format("Order %s completed", event.getOrderId()));
+        this.completed = true;
+    }
+
 }

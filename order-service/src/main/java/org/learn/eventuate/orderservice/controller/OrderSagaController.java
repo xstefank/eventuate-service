@@ -20,7 +20,7 @@ public class OrderSagaController {
     @RequestMapping(method = RequestMethod.POST, path = "/shipment")
     public String shipmentResponse(@RequestBody ShipmentInfo shipmentInfo) {
 
-        LoggerFactory.getLogger("sdf").info("request shipment for saga - " + shipmentInfo.getSagaId());
+        LoggerFactory.getLogger(OrderSagaController.class).info("request shipment for saga - " + shipmentInfo.getSagaId());
         orderSagaService.processValidShipment(shipmentInfo);
 
         return String.format("Shipment for saga %s recived by order-service", shipmentInfo.getSagaId());

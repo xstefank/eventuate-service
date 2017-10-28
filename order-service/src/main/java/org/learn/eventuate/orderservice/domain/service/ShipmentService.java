@@ -31,7 +31,7 @@ public class ShipmentService {
 
     public void requestShipment(String sagaId, ProductInfo productInfo) {
         final String url = properties.getShipmentUrl() + REQUEST;
-        log.info("posting shipment request to " + url);
+        log.info("posting shipment request for saga " + sagaId + " to " + url);
 
         OrderInfo orderInfo = new OrderInfo(sagaId, productInfo);
         String result = restTemplate.postForObject(url, orderInfo, String.class);
