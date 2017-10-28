@@ -3,6 +3,4 @@ include 'order-service'
 include 'shipment-service'
 
 rootProject.name = 'eventuate-service'
-include 'ship-service'
-include 'shipment-service'
 

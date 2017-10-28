@@ -1,5 +1,9 @@
 package org.learn.eventuate.shipmentservice.controller;
 
+import org.learn.eventuate.coreapi.OrderInfo;
+import org.learn.eventuate.shipmentservice.domain.service.ShipmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,8 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class ShipmentController {
 
-    @RequestMapping(method = RequestMethod.GET, path = "/test")
-    public String requestShipment() {
-        return "Shipment testing message";
+    @Autowired
+    private ShipmentService shipmentService;
+
+    @RequestMapping(method = RequestMethod.POST, path = "/request")
+    public String requestShipment(@RequestBody OrderInfo orderInfo) {
+        shipmentService.prepareShipment(orderInfo);
+
+        return "Shipment request is being processed";
     }
 }
