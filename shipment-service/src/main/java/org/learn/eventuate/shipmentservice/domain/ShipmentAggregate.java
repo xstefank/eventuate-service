@@ -4,6 +4,7 @@ import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.OrderInfo;
+import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.shipmentservice.command.PrepareShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.ShipmentCommand;
 import org.learn.eventuate.shipmentservice.domain.event.ShipmentProcessedEvent;

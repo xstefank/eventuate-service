@@ -9,8 +9,10 @@ import org.learn.eventuate.shipmentservice.domain.ShipmentAggregate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @Import({EventuateDriverConfiguration.class})
@@ -25,5 +27,10 @@ public class ShipmentServiceApplication {
     @Bean
     public AggregateRepository<ShipmentAggregate, ShipmentCommand> aggregateRepository(EventuateAggregateStore store) {
         return new AggregateRepository<>(ShipmentAggregate.class, store);
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 }

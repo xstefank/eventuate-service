@@ -1,7 +1,9 @@
 package org.learn.eventuate.shipmentservice.domain.event;
 
+import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.OrderInfo;
 
+@NoArgsConstructor
 public class ShipmentProcessedEvent implements ShipmentEvent {
 
     private OrderInfo orderInfo;
