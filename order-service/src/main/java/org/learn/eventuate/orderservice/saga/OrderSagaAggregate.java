@@ -25,8 +25,6 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     private ProductInfo productInfo;
 
 
-
-
     public List<Event> process(StartOrderSagaCommand command) {
         id = Util.generateId();
         log.info("STARTING SAGA - " + id);
@@ -46,18 +44,20 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         return EventUtil.events(new ShipmentRequestedEvent(productInfo));
     }
 
-    public void process(ProcessShipmentCommand command) {
-        log.info("received ProcessShipmentCommand for saga " + id);
+    public List<Event> process(ProcessShipmentCommand command) {
+        log.info("received ProcessShipmentCommand for saga " + productInfo.getProductId());
         orderProcessing.setShipmentProcessed(true);
 
 //        checkSagaCompleted();
+        return EventUtil.events();
     }
 
 
 
     //required by eventuate
     public void apply(ShipmentRequestedEvent event) {
-        log.info(String.format("Shipment for order {0} has been requested", id));
+        this.productInfo = event.getProductInfo();
+        log.info(String.format("Shipment for order %s has been requested", id));
     }
 //
 //    @SagaEventHandler(associationProperty = "orderId")

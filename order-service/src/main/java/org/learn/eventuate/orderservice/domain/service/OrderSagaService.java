@@ -24,7 +24,7 @@ public class OrderSagaService {
     }
 
     public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processValidShipment(ShipmentInfo shipmentInfo) {
-        return aggregateRepository.save(new ProcessShipmentCommand(shipmentInfo));
+        return aggregateRepository.update(shipmentInfo.getSagaId(), new ProcessShipmentCommand(shipmentInfo));
     }
 
 }
