@@ -1,12 +1,12 @@
-package org.learn.eventuate.invservice;
+package org.learn.eventuate.invoiceservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InvServiceApplication {
+public class InvoiceServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InvServiceApplication.class, args);
+		SpringApplication.run(InvoiceServiceApplication.class, args);
 	}
 }

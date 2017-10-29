@@ -1,4 +1,4 @@
-package org.learn.eventuate.invservice;
+package org.learn.eventuate.invoiceservice;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class InvServiceApplicationTests {
+public class InvoiceServiceApplicationTests {
 
 	@Test
 	@Ignore
