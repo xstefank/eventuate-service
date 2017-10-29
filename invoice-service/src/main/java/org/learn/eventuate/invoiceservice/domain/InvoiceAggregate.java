@@ -17,12 +17,19 @@ public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregat
 
     private Logger log = LoggerFactory.getLogger(InvoiceAggregate.class);
 
+    private String invoice;
+
     public List<Event> process(PrepareInvoiceCommand command) {
         log.info("on PrepareInvoiceCommand");
         OrderSagaInfo sagaInfo = command.getOrderSagaInfo();
 
         String invoice = generateInvoice(sagaInfo.getProductInfo());
         return EventUtil.events(new InvoiceProcessedEvent(sagaInfo, invoice));
+    }
+
+    public void apply(InvoiceProcessedEvent event) {
+        log.info("on InvoiceProcessedEvent");
+        this.invoice = event.getInvoice();
     }
 
     private String generateInvoice(ProductInfo productInfo) {

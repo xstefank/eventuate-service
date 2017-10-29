@@ -1,6 +1,5 @@
 package org.learn.eventuate.invoiceservice.domain.event;
 
-import io.eventuate.Event;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 
 public class InvoiceProcessedEvent implements InvoiceEvent {
