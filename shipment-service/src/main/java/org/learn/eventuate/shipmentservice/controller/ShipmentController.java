@@ -1,6 +1,6 @@
 package org.learn.eventuate.shipmentservice.controller;
 
-import org.learn.eventuate.coreapi.OrderInfo;
+import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.shipmentservice.domain.service.ShipmentService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ public class ShipmentController {
     private ShipmentService shipmentService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/request")
-    public String requestShipment(@RequestBody OrderInfo orderInfo) {
-        LoggerFactory.getLogger(ShipmentController.class).info("request shipment for saga - " + orderInfo.getSagaId());
-        shipmentService.prepareShipment(orderInfo);
+    public String requestShipment(@RequestBody OrderSagaInfo orderSagaInfo) {
+        LoggerFactory.getLogger(ShipmentController.class).info("request shipment for saga - " + orderSagaInfo.getSagaId());
+        shipmentService.prepareShipment(orderSagaInfo);
 
         return "Shipment request is being processed";
     }

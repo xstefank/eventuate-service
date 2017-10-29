@@ -1,16 +1,16 @@
 package org.learn.eventuate.shipmentservice.command;
 
-import org.learn.eventuate.coreapi.OrderInfo;
+import org.learn.eventuate.coreapi.OrderSagaInfo;
 
 public class PrepareShipmentCommand implements ShipmentCommand {
 
-    private OrderInfo orderInfo;
+    private OrderSagaInfo orderSagaInfo;
 
-    public PrepareShipmentCommand(OrderInfo orderInfo) {
-        this.orderInfo = orderInfo;
+    public PrepareShipmentCommand(OrderSagaInfo orderSagaInfo) {
+        this.orderSagaInfo = orderSagaInfo;
     }
 
-    public OrderInfo getOrderInfo() {
-        return orderInfo;
+    public OrderSagaInfo getOrderSagaInfo() {
+        return orderSagaInfo;
     }
 }

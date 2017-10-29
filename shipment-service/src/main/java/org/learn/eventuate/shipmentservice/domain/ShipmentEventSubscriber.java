@@ -32,8 +32,8 @@ public class ShipmentEventSubscriber {
 
         String url = properties.getOrderUrl() + SHIPMENT_PATH;
 
-        log.info("saga id - " + event.getOrderInfo().getSagaId());
-        ShipmentInfo shipmentInfo = new ShipmentInfo(event.getOrderInfo().getSagaId(), event.getPrice());
+        log.info("saga id - " + event.getOrderSagaInfo().getSagaId());
+        ShipmentInfo shipmentInfo = new ShipmentInfo(event.getOrderSagaInfo().getSagaId(), event.getPrice());
         String response = restTemplate.postForObject(url, shipmentInfo, String.class);
 
         log.info(response);

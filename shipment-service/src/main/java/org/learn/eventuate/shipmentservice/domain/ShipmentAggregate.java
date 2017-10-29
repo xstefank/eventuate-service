@@ -3,8 +3,7 @@ package org.learn.eventuate.shipmentservice.domain;
 import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
-import org.learn.eventuate.coreapi.OrderInfo;
-import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.shipmentservice.command.PrepareShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.ShipmentCommand;
 import org.learn.eventuate.shipmentservice.domain.event.ShipmentProcessedEvent;
@@ -20,9 +19,9 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
     private static final Logger log = LoggerFactory.getLogger(ShipmentAggregate.class);
 
     public List<Event> process(PrepareShipmentCommand command) {
-        int price = generatePriceForOrder(command.getOrderInfo());
+        int price = generatePriceForOrder(command.getOrderSagaInfo());
 
-        return EventUtil.events(new ShipmentProcessedEvent(command.getOrderInfo(), price));
+        return EventUtil.events(new ShipmentProcessedEvent(command.getOrderSagaInfo(), price));
     }
 
     public void apply(ShipmentProcessedEvent event) {
@@ -30,7 +29,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
         this.price = event.getPrice();
     }
 
-    private int generatePriceForOrder(OrderInfo orderInfo) {
+    private int generatePriceForOrder(OrderSagaInfo orderSagaInfo) {
         //return testing stub
         return 42;
     }

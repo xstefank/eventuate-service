@@ -1,6 +1,6 @@
 package org.learn.eventuate.orderservice.domain.service;
 
-import org.learn.eventuate.coreapi.OrderInfo;
+import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.config.OrderServiceProperties;
 import org.slf4j.Logger;
@@ -33,8 +33,8 @@ public class ShipmentService {
         final String url = properties.getShipmentUrl() + REQUEST;
         log.info("posting shipment request for saga " + sagaId + " to " + url);
 
-        OrderInfo orderInfo = new OrderInfo(sagaId, productInfo);
-        String result = restTemplate.postForObject(url, orderInfo, String.class);
+        OrderSagaInfo orderSagaInfo = new OrderSagaInfo(sagaId, productInfo);
+        String result = restTemplate.postForObject(url, orderSagaInfo, String.class);
         log.info(result);
     }
 
