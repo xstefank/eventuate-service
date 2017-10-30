@@ -4,9 +4,10 @@ import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
+import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
-import org.learn.eventuate.orderservice.domain.service.ShipmentService;
+import org.learn.eventuate.orderservice.domain.service.SagaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class SagaEventSubscriber {
     private OrderSagaService orderSagaService;
 
     @Autowired
-    private ShipmentService shipmentService;
+    private SagaService sagaService;
 
 
     @EventHandlerMethod
@@ -37,6 +38,12 @@ public class SagaEventSubscriber {
     @EventHandlerMethod
     public void onShipmentRequestedEvent(DispatchedEvent<ShipmentRequestedEvent> dispatchedEvent) {
         log.info("on ShipmentRequestedEvent");
-        shipmentService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+        sagaService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+    }
+
+    @EventHandlerMethod
+    public void onInvoiceRequestedEvent(DispatchedEvent<InvoiceRequestedEvent> dispatchedEvent) {
+        log.info("on InvoiceRequestedEvent");
+        sagaService.requestInvoice(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
     }
 }

@@ -5,8 +5,10 @@ import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.command.OrderSagaCommand;
+import org.learn.eventuate.orderservice.command.ProcessInvoiceCommand;
 import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
+import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaComletedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
@@ -42,12 +44,20 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 //        commandGateway.send(new PrepareInvoiceCommand(orderId, productInfo));
 
         return EventUtil.events(new OrderSagaCreatedEvent(command.getOrderId(), command.getProductInfo()),
-                new ShipmentRequestedEvent(productInfo));
+                new ShipmentRequestedEvent(productInfo),
+                new InvoiceRequestedEvent(productInfo));
     }
 
     public List<Event> process(ProcessShipmentCommand command) {
         log.info("received ProcessShipmentCommand for order " + orderId);
         orderProcessing.setShipmentProcessed(true);
+
+        return checkSagaCompleted();
+    }
+
+    public List<Event> process(ProcessInvoiceCommand command) {
+        log.info("received ProcessInvoiceCommand for order " + orderId);
+        orderProcessing.setInvoiceProcessed(true);
 
         return checkSagaCompleted();
     }
@@ -58,18 +68,15 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     }
 
     //required by eventuate
+    
     public void apply(ShipmentRequestedEvent event) {
         log.info(String.format("Shipment for order %s has been requested", orderId));
     }
-//
-//    @SagaEventHandler(associationProperty = "orderId")
-//    public void on(InvoicePreparedEvent event) {
-//        log.info("on InvoicePreparedEvent");
-//        orderProcessing.setInvoiceProcessed(true);
-//
-//        checkSagaCompleted();
-//    }
-//
+
+    public void apply(InvoiceRequestedEvent event) {
+        log.info(String.format("Invoice for order %s has been requested", orderId));
+    }
+
     private List<Event> checkSagaCompleted() {
         if (orderProcessing.isDone()) {
             log.info("saga executed successfully");

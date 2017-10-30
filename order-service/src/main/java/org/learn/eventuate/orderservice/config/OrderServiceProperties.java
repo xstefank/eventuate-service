@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class OrderServiceProperties {
 
     private String shipmentUrl = "";
+    private String invoiceUrl = "";
 
     public String getShipmentUrl() {
         return shipmentUrl;
@@ -15,5 +16,13 @@ public class OrderServiceProperties {
 
     public void setShipmentUrl(String shipmentUrl) {
         this.shipmentUrl = shipmentUrl;
+    }
+
+    public String getInvoiceUrl() {
+        return invoiceUrl;
+    }
+
+    public void setInvoiceUrl(String invoiceUrl) {
+        this.invoiceUrl = invoiceUrl;
     }
 }

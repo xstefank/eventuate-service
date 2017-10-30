@@ -2,9 +2,11 @@ package org.learn.eventuate.orderservice.domain.service;
 
 import io.eventuate.AggregateRepository;
 import io.eventuate.EntityWithIdAndVersion;
+import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.orderservice.command.OrderSagaCommand;
+import org.learn.eventuate.orderservice.command.ProcessInvoiceCommand;
 import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.saga.OrderSagaAggregate;
@@ -27,8 +29,12 @@ public class OrderSagaService {
         return aggregateRepository.save(new StartOrderSagaCommand(orderId, productInfo));
     }
 
-    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processValidShipment(ShipmentInfo shipmentInfo) {
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processShipment(ShipmentInfo shipmentInfo) {
         return aggregateRepository.update(shipmentInfo.getSagaId(), new ProcessShipmentCommand(shipmentInfo));
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processInvoice(InvoiceInfo invoiceInfo) {
+        return aggregateRepository.update(invoiceInfo.getSagaId(), new ProcessInvoiceCommand(invoiceInfo));
     }
 
 }

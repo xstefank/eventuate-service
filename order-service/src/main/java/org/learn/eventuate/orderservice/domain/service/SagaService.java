@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
  * Service for calling REST shipment services
  */
 @Component
-public class ShipmentService {
+public class SagaService {
 
     private final RestTemplate restTemplate;
 
@@ -23,9 +23,9 @@ public class ShipmentService {
 
     private static final String REQUEST = "/request";
 
-    private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);
+    private static final Logger log = LoggerFactory.getLogger(SagaService.class);
 
-    public ShipmentService(RestTemplateBuilder restTemplateBuilder) {
+    public SagaService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
@@ -38,4 +38,12 @@ public class ShipmentService {
         log.info(result);
     }
 
+    public void requestInvoice(String sagaId, ProductInfo productInfo) {
+        final String url = properties.getInvoiceUrl() + REQUEST;
+        log.info("posting invoice request for saga " + sagaId + " to " + url);
+
+        OrderSagaInfo orderSagaInfo = new OrderSagaInfo(sagaId, productInfo);
+        String result = restTemplate.postForObject(url, orderSagaInfo, String.class);
+        log.info(result);
+    }
 }
