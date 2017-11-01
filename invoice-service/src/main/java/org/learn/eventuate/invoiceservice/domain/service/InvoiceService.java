@@ -39,6 +39,7 @@ public class InvoiceService {
     public void sendInvoice(InvoiceInfo invoiceInfo) {
         String url = properties.getOrderUrl() + INVOICE_URL_PATH;
 
+        log.info("sending invoice to " + url);
         String response = restTemplate.postForObject(url, invoiceInfo, String.class);
         log.info(response);
     }
