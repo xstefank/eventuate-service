@@ -5,15 +5,17 @@ import io.eventuate.EventuateAggregateStore;
 import io.eventuate.javaclient.driver.EventuateDriverConfiguration;
 import io.eventuate.javaclient.spring.EnableEventHandlers;
 import org.learn.eventuate.orderservice.command.OrderCommand;
-import org.learn.eventuate.orderservice.command.OrderSagaCommand;
+import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.OrderAggregate;
 import org.learn.eventuate.orderservice.saga.OrderSagaAggregate;
 import org.learn.eventuate.orderservice.swagger.SwaggerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @Import({EventuateDriverConfiguration.class, SwaggerConfiguration.class})
@@ -33,6 +35,11 @@ public class OrderServiceApplication {
 	@Bean
 	public AggregateRepository<OrderSagaAggregate, OrderSagaCommand> orderManagementSagaRepository(EventuateAggregateStore eventStore) {
 		return new AggregateRepository<>(OrderSagaAggregate.class, eventStore);
+	}
+
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
 	}
 
 }

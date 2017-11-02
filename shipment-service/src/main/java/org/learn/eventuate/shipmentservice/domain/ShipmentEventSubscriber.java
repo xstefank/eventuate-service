@@ -5,6 +5,7 @@ import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.shipmentservice.config.ShipmentServiceProperties;
+import org.learn.eventuate.shipmentservice.domain.event.ComfirmCompensationEvent;
 import org.learn.eventuate.shipmentservice.domain.event.ShipmentProcessedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +28,21 @@ public class ShipmentEventSubscriber {
     private ShipmentServiceProperties properties;
 
     @EventHandlerMethod
-    public void on(DispatchedEvent<ShipmentProcessedEvent> dispatchedEvent) {
+    public void onShipmentProcessedEvent(DispatchedEvent<ShipmentProcessedEvent> dispatchedEvent) {
         ShipmentProcessedEvent event = dispatchedEvent.getEvent();
 
         String url = properties.getOrderUrl() + SHIPMENT_PATH;
 
         log.info("saga id - " + event.getOrderSagaInfo().getSagaId());
-        ShipmentInfo shipmentInfo = new ShipmentInfo(event.getOrderSagaInfo().getSagaId(), event.getPrice());
+        ShipmentInfo shipmentInfo = new ShipmentInfo(event.getOrderSagaInfo().getSagaId(),
+                dispatchedEvent.getEntityId(), event.getPrice());
         String response = restTemplate.postForObject(url, shipmentInfo, String.class);
 
         log.info(response);
+    }
+
+    @EventHandlerMethod
+    public void onComfirmCompensationEvent(DispatchedEvent<ComfirmCompensationEvent> dispatchedEvent) {
+
     }
 }

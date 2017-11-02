@@ -1,5 +1,6 @@
 package org.learn.eventuate.orderservice.controller;
 
+import org.learn.eventuate.coreapi.FailureInfo;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
@@ -27,6 +28,21 @@ public class OrderSagaController {
         orderSagaService.processShipment(shipmentInfo);
 
         return String.format("Shipment for saga %s recived by order-service", shipmentInfo.getSagaId());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/shipment/fail")
+    public String shipmentFailure(@RequestBody FailureInfo failureInfo) {
+
+        log.info("received shipment failure for saga - " + failureInfo.getSagaId());
+        orderSagaService.processShipmentFailure(failureInfo);
+
+        return String.format("Shipment failure for saga %s recived by order-service", failureInfo.getSagaId());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensated")
+    public String shipmentCompensated(@RequestBody String sagaId) {
+        log.info("recived shipment compensation confirmation for saga - " + sagaId);
+        orderSagaService.
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice")

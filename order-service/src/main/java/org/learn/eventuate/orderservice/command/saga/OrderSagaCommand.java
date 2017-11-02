@@ -1,4 +1,4 @@
-package org.learn.eventuate.orderservice.command;
+package org.learn.eventuate.orderservice.command.saga;
 
 import io.eventuate.Command;
 

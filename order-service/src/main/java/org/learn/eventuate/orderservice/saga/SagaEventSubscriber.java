@@ -4,6 +4,7 @@ import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
+import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
@@ -22,9 +23,6 @@ public class SagaEventSubscriber {
     @Autowired
     private OrderSagaService orderSagaService;
 
-    @Autowired
-    private SagaService sagaService;
-
 
     @EventHandlerMethod
     public void onOrderFiledEvent(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
@@ -38,12 +36,18 @@ public class SagaEventSubscriber {
     @EventHandlerMethod
     public void onShipmentRequestedEvent(DispatchedEvent<ShipmentRequestedEvent> dispatchedEvent) {
         log.info("on ShipmentRequestedEvent");
-        sagaService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+        orderSagaService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
     }
 
     @EventHandlerMethod
     public void onInvoiceRequestedEvent(DispatchedEvent<InvoiceRequestedEvent> dispatchedEvent) {
         log.info("on InvoiceRequestedEvent");
-        sagaService.requestInvoice(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+        orderSagaService.requestInvoice(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+    }
+
+    @EventHandlerMethod
+    public void onCompensateSagaEvent(DispatchedEvent<CompensateSagaEvent> dispatchedEvent) {
+        log.info("on CompensateSagaEvent");
+        orderSagaService.compensateSaga(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent());
     }
 }

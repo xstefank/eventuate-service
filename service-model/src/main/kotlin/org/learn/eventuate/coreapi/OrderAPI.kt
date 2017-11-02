@@ -7,9 +7,11 @@ import org.learn.eventuate.event.OrderEvent
 data class ProductInfo(val productId: String = "", val comment: String = "", val price: Int = 0)
 
 data class OrderSagaInfo(val sagaId: String = "", val productInfo: ProductInfo? = null)
-
-data class ShipmentInfo(val sagaId: String = "", val shipmentPrice: Int = 0)
+data class ShipmentInfo(val sagaId: String = "", val shipmentId: String = "", val shipmentPrice: Int = 0)
 data class InvoiceInfo(val sagaId: String = "", val invoice: String = "")
+
+data class FailureInfo(val sagaId: String = "", val cause: String = "")
+data class ShipmentFailureInfo(val sagaId: String, val shipmentId: String, val cause: String)
 
 
 data class OrderFiledEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
