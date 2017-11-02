@@ -8,9 +8,11 @@ import org.learn.eventuate.orderservice.command.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.ProcessInvoiceCommand;
 import org.learn.eventuate.orderservice.command.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.StartOrderSagaCommand;
+import org.learn.eventuate.orderservice.domain.event.InvoiceCompletedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaComletedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
+import org.learn.eventuate.orderservice.domain.event.ShipmentCompletedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +35,6 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
         productInfo = command.getProductInfo();
 
-//        shipmentService.requestShipment(id, productInfo);
-
-//        //request shipment
-//        log.info("sending PrepareShipmentCommand");
-//        commandGateway.send(new PrepareShipmentCommand(orderId, productInfo));
-//
-//        //request invoice
-//        log.info("sending PrepareInvoiceCommand");
-//        commandGateway.send(new PrepareInvoiceCommand(orderId, productInfo));
-
         return EventUtil.events(new OrderSagaCreatedEvent(command.getOrderId(), command.getProductInfo()),
                 new ShipmentRequestedEvent(productInfo),
                 new InvoiceRequestedEvent(productInfo));
@@ -50,24 +42,20 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
     public List<Event> process(ProcessShipmentCommand command) {
         log.info("received ProcessShipmentCommand for order " + orderId);
-        orderProcessing.setShipmentProcessed(true);
 
-        return checkSagaCompleted();
+        return EventUtil.events(new ShipmentCompletedEvent());
     }
 
     public List<Event> process(ProcessInvoiceCommand command) {
         log.info("received ProcessInvoiceCommand for order " + orderId);
-        orderProcessing.setInvoiceProcessed(true);
 
-        return checkSagaCompleted();
+        return EventUtil.events(new InvoiceCompletedEvent());
     }
 
     public void apply(OrderSagaCreatedEvent event) {
         this.orderId = event.getOrderId();
         this.productInfo = event.getProductInfo();
     }
-
-    //required by eventuate
 
     public void apply(ShipmentRequestedEvent event) {
         log.info(String.format("Shipment for order %s has been requested", orderId));
@@ -77,20 +65,24 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         log.info(String.format("Invoice for order %s has been requested", orderId));
     }
 
-    private List<Event> checkSagaCompleted() {
-        log.info("checkSagaCompleted");
+    public void apply(ShipmentCompletedEvent event) {
+        orderProcessing.setShipmentProcessed(true);
+        checkSagaCompleted();
+    }
+
+    public void apply(InvoiceCompletedEvent event) {
+        orderProcessing.setInvoiceProcessed(true);
+        checkSagaCompleted();
+    }
+
+    private void checkSagaCompleted() {
         if (orderProcessing.isDone()) {
             log.info("saga executed successfully");
             endSaga();
-            return EventUtil.events(new OrderSagaComletedEvent(orderId));
         }
-
-        return EventUtil.events();
     }
 
-    public void apply(OrderSagaComletedEvent event) {
-        log.info("Saga ENDED");
-    }
+
 //
 //    //compensations
 //
