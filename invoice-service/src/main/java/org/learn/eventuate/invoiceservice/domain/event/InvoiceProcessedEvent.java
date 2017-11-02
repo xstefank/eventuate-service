@@ -1,10 +1,13 @@
 package org.learn.eventuate.invoiceservice.domain.event;
 
+import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 
+@NoArgsConstructor
 public class InvoiceProcessedEvent implements InvoiceEvent {
-    private final OrderSagaInfo sagaInfo;
-    private final String invoice;
+
+    private OrderSagaInfo sagaInfo;
+    private String invoice;
 
     public InvoiceProcessedEvent(OrderSagaInfo sagaInfo, String invoice) {
         this.sagaInfo = sagaInfo;

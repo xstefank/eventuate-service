@@ -68,7 +68,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     }
 
     //required by eventuate
-    
+
     public void apply(ShipmentRequestedEvent event) {
         log.info(String.format("Shipment for order %s has been requested", orderId));
     }
@@ -78,6 +78,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     }
 
     private List<Event> checkSagaCompleted() {
+        log.info("checkSagaCompleted");
         if (orderProcessing.isDone()) {
             log.info("saga executed successfully");
             endSaga();
