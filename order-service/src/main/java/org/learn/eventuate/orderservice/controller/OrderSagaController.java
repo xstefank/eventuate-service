@@ -42,7 +42,9 @@ public class OrderSagaController {
     @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensated")
     public String shipmentCompensated(@RequestBody String sagaId) {
         log.info("recived shipment compensation confirmation for saga - " + sagaId);
-        orderSagaService.
+        orderSagaService.compensateShipment(sagaId);
+
+        return "Shipment compensation is received by order-service";
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice")

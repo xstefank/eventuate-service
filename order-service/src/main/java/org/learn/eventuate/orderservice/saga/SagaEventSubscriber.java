@@ -8,7 +8,6 @@ import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
-import org.learn.eventuate.orderservice.domain.service.SagaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

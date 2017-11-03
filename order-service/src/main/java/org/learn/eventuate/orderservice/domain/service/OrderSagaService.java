@@ -8,6 +8,7 @@ import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ShipmentFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessShipmentCommand;
@@ -85,5 +86,9 @@ public class OrderSagaService {
         //possibly handle compensation failure
         String result = restTemplate.postForObject(url, shipmentFailureInfo, String.class);
         log.info(result);
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> compensateShipment(String sagaId) {
+        return aggregateRepository.update(sagaId, new ShipmentCompensatedCommand());
     }
 }
