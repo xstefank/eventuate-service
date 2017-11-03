@@ -4,6 +4,7 @@ import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
@@ -12,6 +13,7 @@ import org.learn.eventuate.orderservice.command.saga.ProcessShipmentFailureComma
 import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
+import org.learn.eventuate.orderservice.domain.event.InvoiceCompensatedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceCompletedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
@@ -112,39 +114,24 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         return EventUtil.events(new ShipmentCompensatedEvent());
     }
 
+    public List<Event> process(InvoiceCompensatedCommand command) {
+        return EventUtil.events(new InvoiceCompensatedEvent());
+    }
+
     public void apply(CompensateSagaEvent event) {
         log.info("Saga for order " + orderId + " is being compensated");
     }
 
     public void apply(ShipmentCompensatedEvent event) {
+        compensationProcessing.setShipmentCompensated(true);
+        checkSagaCompensated();
+    }
+
+    public void apply(InvoiceCompensatedEvent event) {
         compensationProcessing.setInvoiceCompensated(true);
         checkSagaCompensated();
     }
 
-    //    @SagaEventHandler(associationProperty = "orderId")
-    //
-    //    }
-    //        compensateSaga(event.getOrderId(), event.getCause());
-    //
-    //        log.info("on InvoicePreparationFailedEvent");
-//    public void on(InvoicePreparationFailedEvent event) {
-//
-//    @SagaEventHandler(associationProperty = "orderId")
-//    public void on(ShipmentCompensatedEvent event) {
-//        log.info("on ShipmentCompensatedEvent");
-//        compensationProcessing.setShipmentCompensated(true);
-//
-//        checkSagaCompensated();
-//    }
-//
-//    @SagaEventHandler(associationProperty = "orderId")
-//    public void on(InvoiceCompensatedEvent event) {
-//        log.info("on InvoiceCompensatedEvent");
-//        compensationProcessing.setInvoiceCompensated(true);
-//
-//        checkSagaCompensated();
-//    }
-//
     private void checkSagaCompensated() {
         if (compensationProcessing.isCompensated()) {
             log.info("saga fully compensated");

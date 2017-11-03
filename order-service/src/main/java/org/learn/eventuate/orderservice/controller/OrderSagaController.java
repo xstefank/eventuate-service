@@ -39,9 +39,9 @@ public class OrderSagaController {
         return String.format("Shipment failure for saga %s recived by order-service", failureInfo.getSagaId());
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensated")
+    @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensation")
     public String shipmentCompensated(@RequestBody String sagaId) {
-        log.info("recived shipment compensation confirmation for saga - " + sagaId);
+        log.info("received shipment compensation confirmation for saga - " + sagaId);
         orderSagaService.notifyShipmentCompensated(sagaId);
 
         return "Shipment compensation is received by order-service";
@@ -63,5 +63,13 @@ public class OrderSagaController {
         orderSagaService.processInvoiceFailure(failureInfo);
 
         return String.format("Invoice failure for saga %s recived by order-service", failureInfo.getSagaId());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/invoice/compensation")
+    public String invoiceCompensated(@RequestBody String sagaId) {
+        log.info("received invoice compensation confirmation for saga - " + sagaId);
+        orderSagaService.notifyInvoiceCompensated(sagaId);
+
+        return "Invoice compensation is received by order-service";
     }
 }

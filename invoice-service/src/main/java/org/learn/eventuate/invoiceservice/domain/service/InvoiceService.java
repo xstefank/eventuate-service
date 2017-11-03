@@ -4,6 +4,8 @@ import io.eventuate.AggregateRepository;
 import io.eventuate.EntityWithIdAndVersion;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
+import org.learn.eventuate.invoiceservice.command.CompensateInvoiceCommand;
 import org.learn.eventuate.invoiceservice.command.InvoiceCommand;
 import org.learn.eventuate.invoiceservice.command.PrepareInvoiceCommand;
 import org.learn.eventuate.invoiceservice.config.InvoiceServiceProperties;
@@ -42,5 +44,9 @@ public class InvoiceService {
         log.info("sending invoice to " + url);
         String response = restTemplate.postForObject(url, invoiceInfo, String.class);
         log.info(response);
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<InvoiceAggregate>> compensateInvoice(ParticipantFailureInfo failureInfo) {
+        return aggregateRepository.update(failureInfo.getId(), new CompensateInvoiceCommand(failureInfo));
     }
 }

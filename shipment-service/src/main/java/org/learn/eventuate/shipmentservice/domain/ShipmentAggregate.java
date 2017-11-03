@@ -17,6 +17,7 @@ import java.util.List;
 public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggregate<ShipmentAggregate, ShipmentCommand> {
 
     private int price;
+    private boolean deleted;
 
     private static final Logger log = LoggerFactory.getLogger(ShipmentAggregate.class);
 
@@ -39,6 +40,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
     }
 
     public void apply(ComfirmCompensationEvent event) {
+        this.deleted = true;
     }
 
     private int generatePriceForOrder(OrderSagaInfo orderSagaInfo) {

@@ -8,6 +8,7 @@ import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
 import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
@@ -111,5 +112,9 @@ public class OrderSagaService {
 
     public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> notifyShipmentCompensated(String sagaId) {
         return aggregateRepository.update(sagaId, new ShipmentCompensatedCommand());
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> notifyInvoiceCompensated(String sagaId) {
+        return aggregateRepository.update(sagaId, new InvoiceCompensatedCommand());
     }
 }

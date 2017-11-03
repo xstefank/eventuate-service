@@ -43,6 +43,5 @@ public class ShipmentEventSubscriber {
 
     @EventHandlerMethod
     public void onComfirmCompensationEvent(DispatchedEvent<ComfirmCompensationEvent> dispatchedEvent) {
-
     }
 }
