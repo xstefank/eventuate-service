@@ -42,7 +42,7 @@ public class OrderSagaController {
     @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensated")
     public String shipmentCompensated(@RequestBody String sagaId) {
         log.info("recived shipment compensation confirmation for saga - " + sagaId);
-        orderSagaService.compensateShipment(sagaId);
+        orderSagaService.notifyShipmentCompensated(sagaId);
 
         return "Shipment compensation is received by order-service";
     }
@@ -54,5 +54,14 @@ public class OrderSagaController {
         orderSagaService.processInvoice(invoiceInfo);
 
         return String.format("Invoice for saga %s received by order-service", invoiceInfo.getSagaId());
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/invoice/fail")
+    public String invoiceFailure(@RequestBody FailureInfo failureInfo) {
+
+        log.info("received invoice failure for saga - " + failureInfo.getSagaId());
+        orderSagaService.processInvoiceFailure(failureInfo);
+
+        return String.format("Invoice failure for saga %s recived by order-service", failureInfo.getSagaId());
     }
 }

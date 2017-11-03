@@ -6,6 +6,7 @@ import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
+import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessShipmentFailureCommand;
 import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
@@ -90,6 +91,12 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
     public List<Event> process(ProcessShipmentFailureCommand command) {
         log.info("received ProcessShipmentFailureCommand for order " + orderId);
+
+        return compensateSaga(command.getCause());
+    }
+
+    public List<Event> process(ProcessInvoiceFailureCommand command) {
+        log.info("received ProcessInvoiceFailureCommand for order " + orderId);
 
         return compensateSaga(command.getCause());
     }

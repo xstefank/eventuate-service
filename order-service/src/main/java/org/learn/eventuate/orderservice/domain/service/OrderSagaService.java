@@ -6,8 +6,9 @@ import org.learn.eventuate.coreapi.FailureInfo;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
-import org.learn.eventuate.coreapi.ShipmentFailureInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
 import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
@@ -59,6 +60,10 @@ public class OrderSagaService {
         return aggregateRepository.update(failureInfo.getSagaId(), new ProcessShipmentFailureCommand(failureInfo.getCause()));
     }
 
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processInvoiceFailure(FailureInfo failureInfo) {
+        return aggregateRepository.update(failureInfo.getSagaId(), new ProcessInvoiceFailureCommand(failureInfo.getCause()));
+    }
+
     public void requestShipment(String sagaId, ProductInfo productInfo) {
         final String url = properties.getShipmentUrl() + REQUEST;
         log.info("posting shipment request for saga " + sagaId + " to " + url);
@@ -78,17 +83,33 @@ public class OrderSagaService {
     }
 
     public void compensateSaga(String sagaId, CompensateSagaEvent compensationEvent) {
-        final String url = properties.getShipmentUrl() + COMPENSATION;
-        log.info("posting shipemnt compensation request for saga " + sagaId + " to " + url);
+        compensateShipment(sagaId, compensationEvent);
+        compensateInvoice(sagaId, compensationEvent);
+    }
 
-        ShipmentFailureInfo shipmentFailureInfo = new ShipmentFailureInfo(sagaId,
+    private void compensateShipment(String sagaId, CompensateSagaEvent compensationEvent) {
+        final String url = properties.getShipmentUrl() + COMPENSATION;
+        log.info("posting shipement compensation request for saga " + sagaId + " to " + url);
+
+        ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(sagaId,
                 compensationEvent.getShipmentId(), compensationEvent.getCause());
         //possibly handle compensation failure
-        String result = restTemplate.postForObject(url, shipmentFailureInfo, String.class);
+        String result = restTemplate.postForObject(url, failureInfo, String.class);
         log.info(result);
     }
 
-    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> compensateShipment(String sagaId) {
+    private void compensateInvoice(String sagaId, CompensateSagaEvent compensationEvent) {
+        final String url = properties.getInvoiceUrl() + COMPENSATION;
+        log.info("posting invoice compensation request for saga " + sagaId + " to " + url);
+
+        ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(sagaId,
+                compensationEvent.getInvoiceId(), compensationEvent.getCause());
+
+        String result = restTemplate.postForObject(url, failureInfo, String.class);
+        log.info(result);
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> notifyShipmentCompensated(String sagaId) {
         return aggregateRepository.update(sagaId, new ShipmentCompensatedCommand());
     }
 }

@@ -1,7 +1,7 @@
 package org.learn.eventuate.shipmentservice.controller;
 
 import org.learn.eventuate.coreapi.OrderSagaInfo;
-import org.learn.eventuate.coreapi.ShipmentFailureInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.shipmentservice.domain.service.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class ShipmentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/compensate")
-    public String compensateShipemnt(@RequestBody ShipmentFailureInfo failureInfo) {
+    public String compensateShipemnt(@RequestBody ParticipantFailureInfo failureInfo) {
         log.info("compensation request for saga - " + failureInfo.getSagaId());
         shipmentService.compensateShipment(failureInfo);
 

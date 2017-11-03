@@ -1,18 +1,18 @@
 package org.learn.eventuate.shipmentservice.command;
 
 import lombok.NoArgsConstructor;
-import org.learn.eventuate.coreapi.ShipmentFailureInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 
 @NoArgsConstructor
 public class CompensateShipmentCommand implements ShipmentCommand {
 
-    private ShipmentFailureInfo failureInfo;
+    private ParticipantFailureInfo failureInfo;
 
-    public CompensateShipmentCommand(ShipmentFailureInfo failureInfo) {
+    public CompensateShipmentCommand(ParticipantFailureInfo failureInfo) {
         this.failureInfo = failureInfo;
     }
 
-    public ShipmentFailureInfo getFailureInfo() {
+    public ParticipantFailureInfo getFailureInfo() {
         return failureInfo;
     }
 }

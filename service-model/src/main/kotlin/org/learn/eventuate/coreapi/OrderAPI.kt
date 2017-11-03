@@ -11,7 +11,7 @@ data class ShipmentInfo(val sagaId: String = "", val shipmentId: String = "", va
 data class InvoiceInfo(val sagaId: String = "", val invoice: String = "")
 
 data class FailureInfo(val sagaId: String = "", val cause: String = "")
-data class ShipmentFailureInfo(val sagaId: String, val shipmentId: String, val cause: String)
+data class ParticipantFailureInfo(val sagaId: String = "", val id: String = "", val cause: String = "")
 
 
 data class OrderFiledEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent

@@ -2,7 +2,7 @@ package org.learn.eventuate.shipmentservice.domain.service;
 
 import io.eventuate.AggregateRepository;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
-import org.learn.eventuate.coreapi.ShipmentFailureInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.shipmentservice.command.CompensateShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.PrepareShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.ShipmentCommand;
@@ -21,7 +21,7 @@ public class ShipmentService {
         return "Shipment request received and is being processed";
     }
 
-    public void compensateShipment(ShipmentFailureInfo failureInfo) {
-        aggregateRepository.update(failureInfo.getShipmentId(), new CompensateShipmentCommand(failureInfo));
+    public void compensateShipment(ParticipantFailureInfo failureInfo) {
+        aggregateRepository.update(failureInfo.getId(), new CompensateShipmentCommand(failureInfo));
     }
 }

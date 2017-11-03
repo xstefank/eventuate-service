@@ -28,7 +28,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
 
     public List<Event> process(CompensateShipmentCommand command) {
         //shipment compensation
-        log.info("shipment " + command.getFailureInfo().getShipmentId() + " compensated");
+        log.info("shipment " + command.getFailureInfo().getId() + " compensated");
 
         return EventUtil.events(new ComfirmCompensationEvent(command.getFailureInfo().getSagaId()));
     }
