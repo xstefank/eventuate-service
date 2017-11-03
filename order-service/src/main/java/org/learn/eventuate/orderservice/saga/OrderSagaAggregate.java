@@ -55,7 +55,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     public List<Event> process(ProcessInvoiceCommand command) {
         log.info("received ProcessInvoiceCommand for order " + orderId);
 
-        return EventUtil.events(new InvoiceCompletedEvent());
+        return EventUtil.events(new InvoiceCompletedEvent(command.getInvoiceInfo().getInvoiceId()));
     }
 
     public void apply(OrderSagaCreatedEvent event) {
@@ -77,7 +77,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     }
 
     public void apply(InvoiceCompletedEvent event) {
-        orderProcessing.setInvoiceId("stub");
+        orderProcessing.setInvoiceId(event.getInvoiceId());
         checkSagaCompleted();
     }
 

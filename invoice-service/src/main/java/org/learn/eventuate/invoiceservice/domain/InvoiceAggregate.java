@@ -9,6 +9,7 @@ import org.learn.eventuate.invoiceservice.command.CompensateInvoiceCommand;
 import org.learn.eventuate.invoiceservice.command.InvoiceCommand;
 import org.learn.eventuate.invoiceservice.command.PrepareInvoiceCommand;
 import org.learn.eventuate.invoiceservice.domain.event.ConfirmCompensationEvent;
+import org.learn.eventuate.invoiceservice.domain.event.InvoicePreparationFailedEvent;
 import org.learn.eventuate.invoiceservice.domain.event.InvoiceProcessedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregate<InvoiceAggregate, InvoiceCommand> {
 
-    private Logger log = LoggerFactory.getLogger(InvoiceAggregate.class);
+    private static final Logger log = LoggerFactory.getLogger(InvoiceAggregate.class);
 
     private String invoice;
     private boolean deleted;
@@ -25,6 +26,10 @@ public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregat
     public List<Event> process(PrepareInvoiceCommand command) {
         log.info("on PrepareInvoiceCommand");
         OrderSagaInfo sagaInfo = command.getOrderSagaInfo();
+
+        if (sagaInfo.getProductInfo().getProductId().equals("failInvoice")) {
+            return EventUtil.events(new InvoicePreparationFailedEvent(sagaInfo.getSagaId(), "test stub invoice failure"));
+        }
 
         String invoice = generateInvoice(sagaInfo.getProductInfo());
         return EventUtil.events(new InvoiceProcessedEvent(sagaInfo, invoice));
@@ -41,6 +46,10 @@ public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregat
     public void apply(InvoiceProcessedEvent event) {
         log.info("on InvoiceProcessedEvent");
         this.invoice = event.getInvoice();
+    }
+
+    public void apply(InvoicePreparationFailedEvent event) {
+        log.info("invoice preparation failed with cause " + event.getCause());
     }
 
     public void apply(ConfirmCompensationEvent event) {

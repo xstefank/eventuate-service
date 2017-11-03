@@ -3,11 +3,11 @@ package org.learn.eventuate.shipmentservice.domain.event;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class ComfirmCompensationEvent implements ShipmentEvent {
+public class ConfirmCompensationEvent implements ShipmentEvent {
 
     private String sagaId;
 
-    public ComfirmCompensationEvent(String sagaId) {
+    public ConfirmCompensationEvent(String sagaId) {
         this.sagaId = sagaId;
     }
 

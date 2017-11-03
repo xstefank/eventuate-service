@@ -5,6 +5,7 @@ import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.invoiceservice.domain.event.ConfirmCompensationEvent;
+import org.learn.eventuate.invoiceservice.domain.event.InvoicePreparationFailedEvent;
 import org.learn.eventuate.invoiceservice.domain.event.InvoiceProcessedEvent;
 import org.learn.eventuate.invoiceservice.domain.service.InvoiceService;
 import org.slf4j.Logger;
@@ -26,14 +27,23 @@ public class InvoiceEventSubscriber {
         log.info("subcriber - on InvoiceProcessedEvent");
 
         InvoiceProcessedEvent event = dispatchedEvent.getEvent();
-        InvoiceInfo invoiceInfo = new InvoiceInfo(event.getSagaInfo().getSagaId(), event.getInvoice());
+        InvoiceInfo invoiceInfo = new InvoiceInfo(event.getSagaInfo().getSagaId(),
+                dispatchedEvent.getEntityId(), event.getInvoice());
         invoiceService.sendInvoice(invoiceInfo);
     }
 
     @EventHandlerMethod
     public void onConfirmCompensationEvent(DispatchedEvent<ConfirmCompensationEvent> dispatchedEvent) {
         log.info("subscriber - on ConfirmCompensationEvent");
+        invoiceService.confirmCompensation(dispatchedEvent.getEvent().getSagaId());
+    }
 
+    @EventHandlerMethod
+    public void onInvoicePreparationFailedEvent(DispatchedEvent<InvoicePreparationFailedEvent> dispatchedEvent) {
+        log.info("subscriber - on InvoicePreparationFailedEvent");
+
+        InvoicePreparationFailedEvent event = dispatchedEvent.getEvent();
+        invoiceService.failInvoicePreparation(event.getSagaId(), event.getSagaId());
     }
 
 }
