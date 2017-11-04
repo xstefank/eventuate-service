@@ -43,7 +43,8 @@ public class InvoiceEventSubscriber {
         log.info("subscriber - on InvoicePreparationFailedEvent");
 
         InvoicePreparationFailedEvent event = dispatchedEvent.getEvent();
-        invoiceService.failInvoicePreparation(event.getSagaId(), event.getSagaId());
+        invoiceService.failInvoicePreparation(event.getSagaId(),
+                dispatchedEvent.getEntityId(), event.getSagaId());
     }
 
 }

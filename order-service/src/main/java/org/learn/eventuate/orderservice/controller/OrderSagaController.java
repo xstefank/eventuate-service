@@ -2,6 +2,7 @@ package org.learn.eventuate.orderservice.controller;
 
 import org.learn.eventuate.coreapi.FailureInfo;
 import org.learn.eventuate.coreapi.InvoiceInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class OrderSagaController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice/fail")
-    public String invoiceFailure(@RequestBody FailureInfo failureInfo) {
+    public String invoiceFailure(@RequestBody ParticipantFailureInfo failureInfo) {
 
         log.info("received invoice failure for saga - " + failureInfo.getSagaId());
         orderSagaService.processInvoiceFailure(failureInfo);

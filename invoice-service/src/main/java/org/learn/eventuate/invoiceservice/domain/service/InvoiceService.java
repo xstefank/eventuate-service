@@ -61,12 +61,12 @@ public class InvoiceService {
         log.info(response);
     }
 
-    public void failInvoicePreparation(String sagaId, String cause) {
+    public void failInvoicePreparation(String sagaId, String invoiceId, String cause) {
         String url = properties.getOrderUrl() + INVOICE_URL_PATH + FAILURE;
 
         log.info("sending invoice failure to " + url);
 
-        FailureInfo failureInfo = new FailureInfo(sagaId, cause);
+        ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(sagaId, invoiceId, cause);
         String response = restTemplate.postForObject(url, failureInfo, String.class);
         log.info(response);
     }

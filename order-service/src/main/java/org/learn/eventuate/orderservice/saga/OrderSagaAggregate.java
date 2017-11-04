@@ -15,6 +15,7 @@ import org.learn.eventuate.orderservice.command.saga.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceCompensatedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceCompletedEvent;
+import org.learn.eventuate.orderservice.domain.event.InvoiceFailedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentCompensatedEvent;
@@ -100,7 +101,11 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     public List<Event> process(ProcessInvoiceFailureCommand command) {
         log.info("received ProcessInvoiceFailureCommand for order " + orderId);
 
-        return compensateSaga(command.getCause());
+        return EventUtil.events(new InvoiceFailedEvent(command.getFailureInfo()));
+    }
+
+    public void apply(InvoiceFailedEvent event) {
+        orderProcessing.se
     }
 
     private List<Event> compensateSaga(String cause) {

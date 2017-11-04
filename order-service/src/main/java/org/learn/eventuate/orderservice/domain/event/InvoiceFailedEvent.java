@@ -1,14 +1,14 @@
-package org.learn.eventuate.orderservice.command.saga;
+package org.learn.eventuate.orderservice.domain.event;
 
+import io.eventuate.Event;
 import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 
 @NoArgsConstructor
-public class ProcessInvoiceFailureCommand implements OrderSagaCommand {
-
+public class InvoiceFailedEvent implements Event {
     private ParticipantFailureInfo failureInfo;
 
-    public ProcessInvoiceFailureCommand(ParticipantFailureInfo failureInfo) {
+    public InvoiceFailedEvent(ParticipantFailureInfo failureInfo) {
         this.failureInfo = failureInfo;
     }
 

@@ -61,8 +61,8 @@ public class OrderSagaService {
         return aggregateRepository.update(failureInfo.getSagaId(), new ProcessShipmentFailureCommand(failureInfo.getCause()));
     }
 
-    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processInvoiceFailure(FailureInfo failureInfo) {
-        return aggregateRepository.update(failureInfo.getSagaId(), new ProcessInvoiceFailureCommand(failureInfo.getCause()));
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processInvoiceFailure(ParticipantFailureInfo failureInfo) {
+        return aggregateRepository.update(failureInfo.getSagaId(), new ProcessInvoiceFailureCommand(failureInfo));
     }
 
     public void requestShipment(String sagaId, ProductInfo productInfo) {
