@@ -2,19 +2,19 @@ package org.learn.eventuate.orderservice.domain.service;
 
 import io.eventuate.AggregateRepository;
 import io.eventuate.EntityWithIdAndVersion;
-import org.learn.eventuate.coreapi.FailureInfo;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
-import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
+import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.orderservice.command.saga.InitSagaCompensationCommand;
 import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;
-import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
-import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
+import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceFailureCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessShipmentCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessShipmentFailureCommand;
+import org.learn.eventuate.orderservice.command.saga.ShipmentCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.StartOrderSagaCommand;
 import org.learn.eventuate.orderservice.config.OrderServiceProperties;
 import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
@@ -57,8 +57,8 @@ public class OrderSagaService {
         return aggregateRepository.update(invoiceInfo.getSagaId(), new ProcessInvoiceCommand(invoiceInfo));
     }
 
-    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processShipmentFailure(FailureInfo failureInfo) {
-        return aggregateRepository.update(failureInfo.getSagaId(), new ProcessShipmentFailureCommand(failureInfo.getCause()));
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processShipmentFailure(ParticipantFailureInfo failureInfo) {
+        return aggregateRepository.update(failureInfo.getSagaId(), new ProcessShipmentFailureCommand(failureInfo));
     }
 
     public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processInvoiceFailure(ParticipantFailureInfo failureInfo) {
@@ -81,6 +81,10 @@ public class OrderSagaService {
         OrderSagaInfo orderSagaInfo = new OrderSagaInfo(sagaId, productInfo);
         String result = restTemplate.postForObject(url, orderSagaInfo, String.class);
         log.info(result);
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> initSagaCompensation(String sagaId, String cause) {
+        return aggregateRepository.update(sagaId, new InitSagaCompensationCommand(sagaId, cause));
     }
 
     public void compensateSaga(String sagaId, CompensateSagaEvent compensationEvent) {

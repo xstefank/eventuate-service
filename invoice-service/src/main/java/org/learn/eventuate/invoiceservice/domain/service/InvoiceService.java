@@ -2,7 +2,6 @@ package org.learn.eventuate.invoiceservice.domain.service;
 
 import io.eventuate.AggregateRepository;
 import io.eventuate.EntityWithIdAndVersion;
-import org.learn.eventuate.coreapi.FailureInfo;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;

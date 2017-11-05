@@ -5,7 +5,10 @@ import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
 import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
+import org.learn.eventuate.orderservice.domain.event.InvoiceFailedEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
+import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
+import org.learn.eventuate.orderservice.domain.event.ShipmentFailedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
 import org.slf4j.Logger;
@@ -26,21 +29,30 @@ public class SagaEventSubscriber {
     @EventHandlerMethod
     public void onOrderFiledEvent(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
         //order is created - start saga
-        log.info("Event listener is startin saga");
+        log.info("Event listener is starting saga");
         OrderFiledEvent event = dispatchedEvent.getEvent();
         orderSagaService.startSaga(event.getOrderId(), event.getProductInfo());
     }
 
     @EventHandlerMethod
-    public void onShipmentRequestedEvent(DispatchedEvent<ShipmentRequestedEvent> dispatchedEvent) {
-        log.info("on ShipmentRequestedEvent");
+    public void onOrderSagaCreatedEvent(DispatchedEvent<OrderSagaCreatedEvent> dispatchedEvent) {
+        log.info("on OrderSagaCreatedEvent");
+        orderSagaService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
         orderSagaService.requestShipment(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
     }
 
     @EventHandlerMethod
-    public void onInvoiceRequestedEvent(DispatchedEvent<InvoiceRequestedEvent> dispatchedEvent) {
-        log.info("on InvoiceRequestedEvent");
-        orderSagaService.requestInvoice(dispatchedEvent.getEntityId(), dispatchedEvent.getEvent().getProductInfo());
+    public void onShipmentFailedEvent(DispatchedEvent<ShipmentFailedEvent> dispatchedEvent) {
+        log.info("on ShipmentFailedEvent");
+        orderSagaService.initSagaCompensation(dispatchedEvent.getEntityId(),
+                dispatchedEvent.getEvent().getFailureInfo().getCause());
+    }
+
+    @EventHandlerMethod
+    public void onInvoiceFailedEvent(DispatchedEvent<InvoiceFailedEvent> dispatchedEvent) {
+        log.info("on InvoiceFailedEvent");
+        orderSagaService.initSagaCompensation(dispatchedEvent.getEntityId(),
+                dispatchedEvent.getEvent().getFailureInfo().getCause());
     }
 
     @EventHandlerMethod

@@ -1,11 +1,10 @@
 package org.learn.eventuate.orderservice.domain.event;
 
-import io.eventuate.Event;
 import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.ProductInfo;
 
 @NoArgsConstructor
-public class OrderSagaCreatedEvent implements Event {
+public class OrderSagaCreatedEvent implements OrderSagaEvent {
 
     private String orderId;
     private ProductInfo productInfo;

@@ -4,10 +4,10 @@ import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 
 @NoArgsConstructor
-public class InvoiceFailedEvent implements OrderSagaEvent {
+public class ShipmentFailedEvent implements OrderSagaEvent {
     private ParticipantFailureInfo failureInfo;
 
-    public InvoiceFailedEvent(ParticipantFailureInfo failureInfo) {
+    public ShipmentFailedEvent(ParticipantFailureInfo failureInfo) {
         this.failureInfo = failureInfo;
     }
 

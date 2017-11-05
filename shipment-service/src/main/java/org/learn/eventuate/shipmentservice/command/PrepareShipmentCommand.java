@@ -1,7 +1,9 @@
 package org.learn.eventuate.shipmentservice.command;
 
+import lombok.NoArgsConstructor;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 
+@NoArgsConstructor
 public class PrepareShipmentCommand implements ShipmentCommand {
 
     private OrderSagaInfo orderSagaInfo;

@@ -1,21 +1,18 @@
 package org.learn.eventuate.orderservice.command.saga;
 
 import lombok.NoArgsConstructor;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 
 @NoArgsConstructor
 public class ProcessShipmentFailureCommand implements OrderSagaCommand {
 
-    private String cause;
+    private ParticipantFailureInfo failureInfo;
 
-    public ProcessShipmentFailureCommand(String cause) {
-        this.cause = cause;
+    public ProcessShipmentFailureCommand(ParticipantFailureInfo failureInfo) {
+        this.failureInfo = failureInfo;
     }
 
-    public String getCause() {
-        return cause;
-    }
-
-    public void setCause(String cause) {
-        this.cause = cause;
+    public ParticipantFailureInfo getFailureInfo() {
+        return failureInfo;
     }
 }

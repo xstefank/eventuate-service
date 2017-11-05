@@ -3,7 +3,7 @@ package org.learn.eventuate.shipmentservice.domain;
 import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
-import org.learn.eventuate.coreapi.FailureInfo;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.shipmentservice.config.ShipmentServiceProperties;
 import org.learn.eventuate.shipmentservice.domain.event.ConfirmCompensationEvent;
@@ -60,7 +60,8 @@ public class ShipmentEventSubscriber {
 
         ShipmentPreparationFailedEvent event = dispatchedEvent.getEvent();
 
-        FailureInfo failureInfo = new FailureInfo(event.getSagaId(), event.getCause());
+        ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(event.getSagaId(),
+                dispatchedEvent.getEntityId(), event.getCause());
         String response = restTemplate.postForObject(url, failureInfo, String.class);
         log.info(response);
     }

@@ -3,7 +3,9 @@ package org.learn.eventuate.orderservice.saga;
 import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
+import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.command.saga.InitSagaCompensationCommand;
 import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;
 import org.learn.eventuate.orderservice.command.saga.OrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.ProcessInvoiceCommand;
@@ -20,6 +22,7 @@ import org.learn.eventuate.orderservice.domain.event.InvoiceRequestedEvent;
 import org.learn.eventuate.orderservice.domain.event.OrderSagaCreatedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentCompensatedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentCompletedEvent;
+import org.learn.eventuate.orderservice.domain.event.ShipmentFailedEvent;
 import org.learn.eventuate.orderservice.domain.event.ShipmentRequestedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +39,12 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     private String orderId;
     private ProductInfo productInfo;
 
-
     public List<Event> process(StartOrderSagaCommand command) {
         log.info("STARTING SAGA for order " + command.getOrderId());
 
         productInfo = command.getProductInfo();
 
-        return EventUtil.events(new OrderSagaCreatedEvent(command.getOrderId(), command.getProductInfo()),
-                new ShipmentRequestedEvent(productInfo),
-                new InvoiceRequestedEvent(productInfo));
+        return EventUtil.events(new OrderSagaCreatedEvent(command.getOrderId(), command.getProductInfo()));
     }
 
     public List<Event> process(ProcessShipmentCommand command) {
@@ -62,14 +62,6 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     public void apply(OrderSagaCreatedEvent event) {
         this.orderId = event.getOrderId();
         this.productInfo = event.getProductInfo();
-    }
-
-    public void apply(ShipmentRequestedEvent event) {
-        log.info(String.format("Shipment for order %s has been requested", orderId));
-    }
-
-    public void apply(InvoiceRequestedEvent event) {
-        log.info(String.format("Invoice for order %s has been requested", orderId));
     }
 
     public void apply(ShipmentCompletedEvent event) {
@@ -95,7 +87,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
     public List<Event> process(ProcessShipmentFailureCommand command) {
         log.info("received ProcessShipmentFailureCommand for order " + orderId);
 
-        return compensateSaga(command.getCause());
+        return EventUtil.events(new ShipmentFailedEvent(command.getFailureInfo()));
     }
 
     public List<Event> process(ProcessInvoiceFailureCommand command) {
@@ -104,14 +96,21 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         return EventUtil.events(new InvoiceFailedEvent(command.getFailureInfo()));
     }
 
-    public void apply(InvoiceFailedEvent event) {
-        orderProcessing.se
+    public void apply(ShipmentFailedEvent event) {
+        orderProcessing.markInvalid();
+        orderProcessing.setShipmentId(event.getFailureInfo().getId());
     }
 
-    private List<Event> compensateSaga(String cause) {
-        log.info(String.format("compensation of saga for model [%s] with casuse - %s", orderId, cause));
+    public void apply(InvoiceFailedEvent event) {
+        orderProcessing.markInvalid();
+        orderProcessing.setInvoiceId(event.getFailureInfo().getId());
+    }
 
-        return EventUtil.events(new CompensateSagaEvent(cause,
+    public List<Event> process(InitSagaCompensationCommand command) {
+        log.info(String.format("intializing saga compensation for saga [%s] with cause - %s",
+                command.getSagaId(), command.getCause()));
+
+        return EventUtil.events(new CompensateSagaEvent(command.getCause(),
                 orderProcessing.getShipmentId(), orderProcessing.getInvoiceId()));
     }
 
@@ -152,8 +151,10 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
         private String shipmentId;
         private String invoiceId;
+        private boolean valid;
 
         public OrderProcessing() {
+            this.valid = true;
         }
 
         public String getShipmentId() {
@@ -172,10 +173,17 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
             this.invoiceId = invoiceId;
         }
 
-        public boolean isDone() {
-            return shipmentId != null && invoiceId != null;
+        public boolean isValid() {
+            return valid;
         }
 
+        public void markInvalid() {
+            this.valid = false;
+        }
+
+        public boolean isDone() {
+            return isValid() && shipmentId != null && invoiceId != null;
+        }
     }
 
     private static class OrderCompensationProcessing {
