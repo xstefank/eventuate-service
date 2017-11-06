@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@EventSubscriber(id = "invoiceEventSubscriber")
+@EventSubscriber(id = "InvoiceEventSubscriber")
 public class InvoiceEventSubscriber {
 
     private static final Logger log = LoggerFactory.getLogger(InvoiceEventSubscriber.class);

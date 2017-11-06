@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@EventSubscriber(id = "shipmentEventSubscriber")
+@EventSubscriber(id = "ShipmentEventSubscriber")
 public class ShipmentEventSubscriber {
 
     private static final String SHIPMENT_PATH = "/management/shipment";
