@@ -24,8 +24,6 @@ public class InvoiceEventSubscriber {
 
     @EventHandlerMethod
     public void onInvoiceProcessedEvent(DispatchedEvent<InvoiceProcessedEvent> dispatchedEvent) {
-        log.info("subcriber - on InvoiceProcessedEvent");
-
         InvoiceProcessedEvent event = dispatchedEvent.getEvent();
         InvoiceInfo invoiceInfo = new InvoiceInfo(event.getSagaInfo().getSagaId(),
                 dispatchedEvent.getEntityId(), event.getInvoice());
@@ -34,17 +32,16 @@ public class InvoiceEventSubscriber {
 
     @EventHandlerMethod
     public void onConfirmCompensationEvent(DispatchedEvent<ConfirmCompensationEvent> dispatchedEvent) {
-        log.info("subscriber - on ConfirmCompensationEvent");
         invoiceService.confirmCompensation(dispatchedEvent.getEvent().getSagaId());
     }
 
     @EventHandlerMethod
     public void onInvoicePreparationFailedEvent(DispatchedEvent<InvoicePreparationFailedEvent> dispatchedEvent) {
-        log.info("subscriber - on InvoicePreparationFailedEvent");
-
         InvoicePreparationFailedEvent event = dispatchedEvent.getEvent();
+        log.info("invoice preparation failed with cause " + event.getCause());
+
         invoiceService.failInvoicePreparation(event.getSagaId(),
-                dispatchedEvent.getEntityId(), event.getSagaId());
+                dispatchedEvent.getEntityId(), event.getCause());
     }
 
 }

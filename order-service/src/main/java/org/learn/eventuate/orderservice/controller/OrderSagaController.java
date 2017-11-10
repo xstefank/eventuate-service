@@ -23,53 +23,37 @@ public class OrderSagaController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/shipment")
     public String shipmentResponse(@RequestBody ShipmentInfo shipmentInfo) {
-
-        log.info("received shipment for saga - " + shipmentInfo.getSagaId());
         orderSagaService.processShipment(shipmentInfo);
-
         return String.format("Shipment for saga %s recived by order-service", shipmentInfo.getSagaId());
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/shipment/fail")
     public String shipmentFailure(@RequestBody ParticipantFailureInfo failureInfo) {
-
-        log.info("received shipment failure for saga - " + failureInfo.getSagaId());
         orderSagaService.processShipmentFailure(failureInfo);
-
-        return String.format("Shipment failure for saga %s recived by order-service", failureInfo.getSagaId());
+        return String.format("Shipment failure for saga %s received by order-service", failureInfo.getSagaId());
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/shipment/compensation")
     public String shipmentCompensated(@RequestBody String sagaId) {
-        log.info("received shipment compensation confirmation for saga - " + sagaId);
         orderSagaService.notifyShipmentCompensated(sagaId);
-
         return "Shipment compensation is received by order-service";
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice")
     public String invoiceResponse(@RequestBody InvoiceInfo invoiceInfo) {
-
-        log.info("received invoice for saga - " + invoiceInfo.getSagaId());
         orderSagaService.processInvoice(invoiceInfo);
-
         return String.format("Invoice for saga %s received by order-service", invoiceInfo.getSagaId());
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice/fail")
     public String invoiceFailure(@RequestBody ParticipantFailureInfo failureInfo) {
-
-        log.info("received invoice failure for saga - " + failureInfo.getSagaId());
         orderSagaService.processInvoiceFailure(failureInfo);
-
-        return String.format("Invoice failure for saga %s recived by order-service", failureInfo.getSagaId());
+        return String.format("Invoice failure for saga %s received by order-service", failureInfo.getSagaId());
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/invoice/compensation")
     public String invoiceCompensated(@RequestBody String sagaId) {
-        log.info("received invoice compensation confirmation for saga - " + sagaId);
         orderSagaService.notifyInvoiceCompensated(sagaId);
-
         return "Invoice compensation is received by order-service";
     }
 }

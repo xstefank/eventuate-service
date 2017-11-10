@@ -22,12 +22,10 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
     private static final Logger log = LoggerFactory.getLogger(OrderAggregate.class);
 
     public List<Event> process(FileOrderCommand command) {
-        log.info("received FileOrderCommand");
         return EventUtil.events(new OrderFiledEvent(command.getOrderId(), command.getProductInfo()));
     }
 
     public List<Event> process(OrderCompletedCommand command) {
-        log.info("received OrderCompletedCommand");
         return EventUtil.events(new OrderCompletedEvent(command.getOrderId(), command.getProductInfo()));
     }
 

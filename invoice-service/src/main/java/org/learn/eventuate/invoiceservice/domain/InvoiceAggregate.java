@@ -44,12 +44,11 @@ public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregat
     }
 
     public void apply(InvoiceProcessedEvent event) {
-        log.info("on InvoiceProcessedEvent");
         this.invoice = event.getInvoice();
     }
 
     public void apply(InvoicePreparationFailedEvent event) {
-        log.info("invoice preparation failed with cause " + event.getCause());
+        this.invoice = "N/A";
     }
 
     public void apply(ConfirmCompensationEvent event) {

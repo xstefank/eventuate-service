@@ -94,7 +94,7 @@ public class OrderSagaService {
 
     private void compensateShipment(String sagaId, CompensateSagaEvent compensationEvent) {
         final String url = properties.getShipmentUrl() + COMPENSATION;
-        log.info("posting shipement compensation request for saga " + sagaId + " to " + url);
+        log.info("posting shipment compensation request for saga " + sagaId + " to " + url);
 
         ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(sagaId,
                 compensationEvent.getShipmentId(), compensationEvent.getCause());
