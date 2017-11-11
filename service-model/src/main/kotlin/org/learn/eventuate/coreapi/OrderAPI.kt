@@ -1,6 +1,7 @@
 package org.learn.eventuate.coreapi
 
-import org.learn.eventuate.event.OrderEvent
+import io.eventuate.Event
+import io.eventuate.EventEntity
 
 
 //domain
@@ -11,6 +12,12 @@ data class ShipmentInfo(val sagaId: String = "", val shipmentId: String = "", va
 data class InvoiceInfo(val sagaId: String = "", val invoiceId: String = "", val invoice: String = "")
 
 data class ParticipantFailureInfo(val sagaId: String = "", val id: String = "", val cause: String = "")
+
+
+//---------------
+
+@EventEntity(entity = "org.learn.eventuate.orderservice.domain.OrderAggregate")
+interface OrderEvent : Event
 
 
 data class OrderFiledEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
