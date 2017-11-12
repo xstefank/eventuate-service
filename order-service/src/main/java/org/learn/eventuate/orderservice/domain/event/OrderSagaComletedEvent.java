@@ -1,8 +1,9 @@
 package org.learn.eventuate.orderservice.domain.event;
 
-import io.eventuate.Event;
+import lombok.NoArgsConstructor;
 
-public class OrderSagaComletedEvent implements Event {
+@NoArgsConstructor
+public class OrderSagaComletedEvent implements OrderSagaEvent {
     private String orderId;
 
     public OrderSagaComletedEvent(String orderId) {

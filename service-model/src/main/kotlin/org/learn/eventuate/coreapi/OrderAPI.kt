@@ -21,4 +21,4 @@ interface OrderEvent : Event
 
 
 data class OrderFiledEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
-class OrderCompletedEvent(val orderId: String, val productInfo: ProductInfo) : OrderEvent
+class OrderCompletedEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
