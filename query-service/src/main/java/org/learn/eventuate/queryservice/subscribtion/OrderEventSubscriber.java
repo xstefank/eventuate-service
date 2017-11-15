@@ -16,7 +16,7 @@ public class OrderEventSubscriber {
 
     @EventHandlerMethod
     public void onOrderFiledEvent(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
-
+        log.info("on OrderFiledEvent -------------------------");
     }
 
 }
