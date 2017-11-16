@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@EventSubscriber(id = "orderEventSubscriber")
-public class OrderEventSubscriber {
+@EventSubscriber(id = "orderQuerySubscriber")
+public class OrderQuerySubscriber {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderEventSubscriber.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderQuerySubscriber.class);
 
     @Autowired
     private OrderRepository orderRepository;

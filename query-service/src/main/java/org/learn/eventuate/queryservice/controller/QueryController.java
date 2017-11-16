@@ -1,7 +1,9 @@
 package org.learn.eventuate.queryservice.controller;
 
+import org.learn.eventuate.queryservice.model.Invoice;
 import org.learn.eventuate.queryservice.model.Order;
 import org.learn.eventuate.queryservice.model.Shipment;
+import org.learn.eventuate.queryservice.repository.InvoiceRepository;
 import org.learn.eventuate.queryservice.repository.OrderRepository;
 import org.learn.eventuate.queryservice.repository.ShipmentRepository;
 import org.slf4j.Logger;
@@ -23,19 +25,28 @@ public class QueryController {
     @Autowired
     private ShipmentRepository shipmentRepository;
 
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
     @GetMapping("/clean")
     public void clean() {
         orderRepository.deleteAll();
         shipmentRepository.deleteAll();
+        invoiceRepository.deleteAll();
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/order")
     public List<Order> getOrders() {
         return orderRepository.findAll();
     }
 
-    @GetMapping("/shipments")
+    @GetMapping("/shipment")
     public List<Shipment> getShipments() {
         return shipmentRepository.findAll();
+    }
+
+    @GetMapping("/invoice")
+    public List<Invoice> getInvoices() {
+        return invoiceRepository.findAll();
     }
 }

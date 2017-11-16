@@ -3,12 +3,12 @@ package org.learn.eventuate.shipmentservice.domain;
 import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
-import org.learn.eventuate.coreapi.ConfirmCompensationEvent;
+import org.learn.eventuate.coreapi.ConfirmShipmentCompensationEvent;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.coreapi.ShipmentPreparationFailedEvent;
 import org.learn.eventuate.coreapi.ShipmentProcessedEvent;
 import org.learn.eventuate.shipmentservice.config.ShipmentServiceProperties;
-import org.learn.eventuate.shipmentservice.domain.event.ShipmentPreparationFailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class ShipmentEventSubscriber {
     }
 
     @EventHandlerMethod
-    public void onComfirmCompensationEvent(DispatchedEvent<ConfirmCompensationEvent> dispatchedEvent) {
+    public void onComfirmCompensationEvent(DispatchedEvent<ConfirmShipmentCompensationEvent> dispatchedEvent) {
 
         String url = properties.getOrderUrl() + SHIPMENT_PATH + COMPENSATION;
 

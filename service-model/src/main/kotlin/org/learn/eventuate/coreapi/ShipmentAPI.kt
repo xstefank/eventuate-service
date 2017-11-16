@@ -7,4 +7,5 @@ import io.eventuate.EventEntity
 interface ShipmentEvent : Event
 
 class ShipmentProcessedEvent(val id: String = "", val orderSagaInfo: OrderSagaInfo? = null, val price: Int = 0) : ShipmentEvent
-class ConfirmCompensationEvent(val sagaId: String = "", val shipmentId: String = "") : ShipmentEvent
+class ShipmentPreparationFailedEvent(val shipmentId: String, val sagaId: String, val cause: String) : ShipmentEvent
+class ConfirmShipmentCompensationEvent(val sagaId: String = "", val shipmentId: String = "") : ShipmentEvent

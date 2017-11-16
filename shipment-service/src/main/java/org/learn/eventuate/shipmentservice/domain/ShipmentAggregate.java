@@ -3,13 +3,13 @@ package org.learn.eventuate.shipmentservice.domain;
 import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
-import org.learn.eventuate.coreapi.ConfirmCompensationEvent;
+import org.learn.eventuate.coreapi.ConfirmShipmentCompensationEvent;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
+import org.learn.eventuate.coreapi.ShipmentPreparationFailedEvent;
 import org.learn.eventuate.coreapi.ShipmentProcessedEvent;
 import org.learn.eventuate.shipmentservice.command.CompensateShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.PrepareShipmentCommand;
 import org.learn.eventuate.shipmentservice.command.ShipmentCommand;
-import org.learn.eventuate.shipmentservice.domain.event.ShipmentPreparationFailedEvent;
 import org.learn.eventuate.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
 
         OrderSagaInfo orderSagaInfo = command.getOrderSagaInfo();
         if (orderSagaInfo.getProductInfo().getProductId().equals("failShipment")) {
-            return EventUtil.events(new ShipmentPreparationFailedEvent(orderSagaInfo.getSagaId(),
+            return EventUtil.events(new ShipmentPreparationFailedEvent(id, orderSagaInfo.getSagaId(),
                     "this is testing shipment failure stub"));
         }
 
@@ -41,7 +41,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
         //shipment compensation
         log.info("shipment " + command.getFailureInfo().getId() + " compensated");
 
-        return EventUtil.events(new ConfirmCompensationEvent(command.getFailureInfo().getSagaId(), id));
+        return EventUtil.events(new ConfirmShipmentCompensationEvent(command.getFailureInfo().getSagaId(), id));
     }
 
     public void apply(ShipmentProcessedEvent event) {
@@ -54,7 +54,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
         log.info("shipment preparation failed with cause " + event.getCause());
     }
 
-    public void apply(ConfirmCompensationEvent event) {
+    public void apply(ConfirmShipmentCompensationEvent event) {
         this.deleted = true;
     }
 
