@@ -1,5 +1,7 @@
 package org.learn.eventuate.shipmentservice.domain.event;
 
+import org.learn.eventuate.coreapi.ShipmentEvent;
+
 public class ShipmentPreparationFailedEvent implements ShipmentEvent {
 
     private final String sagaId;

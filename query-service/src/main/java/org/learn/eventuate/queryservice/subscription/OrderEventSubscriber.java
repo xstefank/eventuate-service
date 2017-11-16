@@ -1,4 +1,4 @@
-package org.learn.eventuate.queryservice.subscribtion;
+package org.learn.eventuate.queryservice.subscription;
 
 import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;

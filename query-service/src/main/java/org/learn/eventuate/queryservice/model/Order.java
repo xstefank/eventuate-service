@@ -26,6 +26,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return String.format("id: %s, product - %s", orderId, productInfo.getProductId());
+        return String.format("id: %s, product: %s", orderId, productInfo.getProductId());
     }
 }
