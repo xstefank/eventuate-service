@@ -158,7 +158,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         }
 
         public String getShipmentId() {
-            return shipmentId;
+            return shipmentId != null ? shipmentId : "N/A";
         }
 
         public void setShipmentId(String shipmentId) {
@@ -166,7 +166,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
         }
 
         public String getInvoiceId() {
-            return invoiceId;
+            return invoiceId != null ? invoiceId : "N/A";
         }
 
         public void setInvoiceId(String invoiceId) {

@@ -35,6 +35,7 @@ public class OrderSagaService {
 
     private static final String REQUEST = "/request";
     private static final String COMPENSATION = "/compensate";
+    private static final String NOT_AVAILABLE = "N/A";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -98,6 +99,22 @@ public class OrderSagaService {
     }
 
     private void compensateShipment(String sagaId, CompensateSagaEvent compensationEvent) {
+        if (!compensationEvent.getShipmentId().equals(NOT_AVAILABLE)) {
+            sendShipmentCompensationRequest(sagaId, compensationEvent);
+        } else {
+            notifyShipmentCompensated(sagaId);
+        }
+    }
+
+    private void compensateInvoice(String sagaId, CompensateSagaEvent compensationEvent) {
+        if (!compensationEvent.getInvoiceId().equals(NOT_AVAILABLE)) {
+            sendInvoiceCompensationRequest(sagaId, compensationEvent);
+        } else {
+            notifyInvoiceCompensated(sagaId);
+        }
+    }
+
+    private void sendShipmentCompensationRequest(String sagaId, CompensateSagaEvent compensationEvent) {
         final String url = properties.getShipmentUrl() + COMPENSATION;
         log.info("posting shipment compensation request for saga " + sagaId + " to " + url);
 
@@ -108,7 +125,7 @@ public class OrderSagaService {
         log.info(result);
     }
 
-    private void compensateInvoice(String sagaId, CompensateSagaEvent compensationEvent) {
+    private void sendInvoiceCompensationRequest(String sagaId, CompensateSagaEvent compensationEvent) {
         final String url = properties.getInvoiceUrl() + COMPENSATION;
         log.info("posting invoice compensation request for saga " + sagaId + " to " + url);
 

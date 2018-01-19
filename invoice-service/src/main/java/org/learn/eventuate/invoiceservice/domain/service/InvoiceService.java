@@ -40,8 +40,11 @@ public class InvoiceService {
         return aggregateRepository.save(new PrepareInvoiceCommand(sagaInfo));
     }
 
-    public CompletableFuture<EntityWithIdAndVersion<InvoiceAggregate>> compensateInvoice(ParticipantFailureInfo failureInfo) {
-        return aggregateRepository.update(failureInfo.getId(), new CompensateInvoiceCommand(failureInfo));
+    public void compensateInvoice(ParticipantFailureInfo failureInfo) {
+        if (failureInfo.getId() == "N/A") {
+            confirmCompensation(failureInfo.getSagaId());
+        }
+        aggregateRepository.update(failureInfo.getId(), new CompensateInvoiceCommand(failureInfo));
     }
 
     public void sendInvoice(InvoiceInfo invoiceInfo) {
