@@ -51,7 +51,8 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
     }
 
     public void apply(ShipmentPreparationFailedEvent event) {
-        log.info("shipment preparation failed with cause " + event.getCause());
+        this.id = event.getShipmentId();
+        this.price = -1;
     }
 
     public void apply(ConfirmShipmentCompensationEvent event) {

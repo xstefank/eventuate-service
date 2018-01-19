@@ -1,0 +1,15 @@
+= Eventuate-service
+
+Example testing application using eventuate.io framework
+
+== Running
+
+1. build project
+ * `./gradlew clean build`
+
+1. run docker-compose
+ * `docker-compose -f docker-compose-eventuate-local.yml up -d --build`
+
+=== Stopping
+
+* `docker-compose -f docker-compose-eventuate-local.yml down --remove-orphans`
