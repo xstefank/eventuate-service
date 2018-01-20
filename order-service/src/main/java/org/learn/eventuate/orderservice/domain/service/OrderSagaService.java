@@ -33,9 +33,8 @@ public class OrderSagaService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSagaService.class);
 
-    private static final String API_PREFIX = "/api";
-    private static final String REQUEST = "/request";
-    private static final String COMPENSATION = "/compensate";
+    private static final String REQUEST = "/api/request";
+    private static final String COMPENSATION = "/api/compensate";
     private static final String NOT_AVAILABLE = "N/A";
 
     @Autowired
@@ -73,7 +72,7 @@ public class OrderSagaService {
     }
 
     public void requestShipment(String sagaId, ProductInfo productInfo) {
-        final String url = properties.getShipmentUrl() + API_PREFIX + REQUEST;
+        final String url = properties.getShipmentUrl() + REQUEST;
         log.info("posting shipment request for saga " + sagaId + " to " + url);
 
         OrderSagaInfo orderSagaInfo = new OrderSagaInfo(sagaId, productInfo);
@@ -116,7 +115,7 @@ public class OrderSagaService {
     }
 
     private void sendShipmentCompensationRequest(String sagaId, CompensateSagaEvent compensationEvent) {
-        final String url = properties.getShipmentUrl() + API_PREFIX + COMPENSATION;
+        final String url = properties.getShipmentUrl() + COMPENSATION;
         log.info("posting shipment compensation request for saga " + sagaId + " to " + url);
 
         ParticipantFailureInfo failureInfo = new ParticipantFailureInfo(sagaId,
