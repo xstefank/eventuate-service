@@ -13,3 +13,18 @@ Example testing application using eventuate.io framework
 === Stopping
 
 * `docker-compose -f docker-compose-eventuate-local.yml down --remove-orphans`
+
+== Testing
+
+==== Valid order
+
+* `curl -X POST -H "Content-Type: application/json" -d '{"productId":"testProduct", "comment":"testComment", "price":"20"}' http://localhost:8080/api/order`
+
+==== Shipment failure
+
+* `curl -X POST -H "Content-Type: application/json" -d '{"productId":"failShipment", "comment":"testComment", "price":"20"}' http://localhost:8080/api/order`
+
+==== Invoice failure
+
+* `curl -X POST -H "Content-Type: application/json" -d '{"productId":"failInvoice", "comment":"testComment", "price":"20"}' http://localhost:8080/api/order`
+
