@@ -31,13 +31,6 @@ public class QueryController {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
-    @GetMapping("/clean")
-    public void clean() {
-        orderRepository.deleteAll();
-        shipmentRepository.deleteAll();
-        invoiceRepository.deleteAll();
-    }
-
     @GetMapping("/orders")
     public List<Order> getOrders() {
         return orderRepository.findAll();
