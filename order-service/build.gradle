@@ -32,8 +32,8 @@ dependencies {
 	compile "io.eventuate.local.java:eventuate-local-java-embedded-cdc-autoconfigure:${eventuateLocalVersion}"
 
 
-	compile "io.springfox:springfox-swagger2:2.2.2"
-	compile 'io.springfox:springfox-swagger-ui:2.2.2'
+	compile "io.springfox:springfox-swagger2:2.7.0"
+	compile 'io.springfox:springfox-swagger-ui:2.7.0'
 	compileOnly 'org.projectlombok:lombok:1.16.18'
 
 
