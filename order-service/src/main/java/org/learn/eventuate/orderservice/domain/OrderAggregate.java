@@ -3,9 +3,11 @@ package org.learn.eventuate.orderservice.domain;
 import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
+import org.learn.eventuate.coreapi.OrderCancelledEvent;
 import org.learn.eventuate.coreapi.OrderCompletedEvent;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.command.CancelOrderCommnad;
 import org.learn.eventuate.orderservice.command.FileOrderCommand;
 import org.learn.eventuate.orderservice.command.OrderCommand;
 import org.learn.eventuate.orderservice.command.OrderCompletedCommand;
@@ -20,6 +22,7 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
     private ProductInfo productInfo;
 
     private boolean completed;
+    private boolean cancelled;
 
     private static final Logger log = LoggerFactory.getLogger(OrderAggregate.class);
 
@@ -33,6 +36,12 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
         return EventUtil.events(new OrderCompletedEvent(orderId, productInfo));
     }
 
+    public List<Event> process(CancelOrderCommnad command) {
+        log.info(String.format("Cancelling the order %s", orderId));
+
+        return EventUtil.events(new OrderCancelledEvent(orderId));
+    }
+
     public void apply(OrderFiledEvent event) {
         orderId = event.getOrderId();
         productInfo = event.getProductInfo();
@@ -40,6 +49,10 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
 
     public void apply(OrderCompletedEvent event) {
         this.completed = true;
+    }
+
+    public void apply(OrderCancelledEvent event) {
+        this.cancelled = true;
     }
 
 }

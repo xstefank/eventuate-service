@@ -2,11 +2,13 @@ package org.learn.eventuate.orderservice.domain.service;
 
 import io.eventuate.AggregateRepository;
 import io.eventuate.EntityWithIdAndVersion;
+import io.eventuate.SaveOptions;
 import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.OrderSagaInfo;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ProductInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
+import org.learn.eventuate.orderservice.command.saga.CancelOrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.CompleteOrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.InitSagaCompensationCommand;
 import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -48,7 +51,12 @@ public class OrderSagaService {
 
 
     public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> startSaga(String orderId, ProductInfo productInfo) {
-        return aggregateRepository.save(new StartOrderSagaCommand(orderId, productInfo));
+        return aggregateRepository.save(new StartOrderSagaCommand(orderId, productInfo),
+                Optional.of(new SaveOptions().withId(orderId)));
+    }
+
+    public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> cancelSaga(String orderId) {
+        return aggregateRepository.update(orderId, new InitSagaCompensationCommand(orderId, "cancelled"));
     }
 
     public CompletableFuture<EntityWithIdAndVersion<OrderSagaAggregate>> processShipment(ShipmentInfo shipmentInfo) {

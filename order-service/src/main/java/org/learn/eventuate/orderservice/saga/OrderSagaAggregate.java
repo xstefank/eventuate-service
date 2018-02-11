@@ -4,6 +4,7 @@ import io.eventuate.Event;
 import io.eventuate.EventUtil;
 import io.eventuate.ReflectiveMutableCommandProcessingAggregate;
 import org.learn.eventuate.coreapi.ProductInfo;
+import org.learn.eventuate.orderservice.command.saga.CancelOrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.CompleteOrderSagaCommand;
 import org.learn.eventuate.orderservice.command.saga.InitSagaCompensationCommand;
 import org.learn.eventuate.orderservice.command.saga.InvoiceCompensatedCommand;

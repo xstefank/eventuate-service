@@ -25,14 +25,17 @@ public class InvoiceAggregate extends ReflectiveMutableCommandProcessingAggregat
     private String invoice;
     private boolean deleted;
 
-    public List<Event> process(PrepareInvoiceCommand command) {
+    public List<Event> process(PrepareInvoiceCommand command) throws InterruptedException {
         log.info("on PrepareInvoiceCommand");
 
         id = Util.generateId();
         OrderSagaInfo sagaInfo = command.getOrderSagaInfo();
 
         if (sagaInfo.getProductInfo().getProductId().equals("failInvoice")) {
-            return EventUtil.events(new InvoicePreparationFailedEvent(id, sagaInfo.getSagaId(), "test stub invoice failure"));
+            return EventUtil.events(new InvoicePreparationFailedEvent(id, sagaInfo.getSagaId(),
+                    "test stub invoice failure"));
+        } else if (sagaInfo.getProductInfo().getProductId().equals("delayInvoice")) {
+            Thread.sleep(30000);
         }
 
         String invoice = generateInvoice(sagaInfo.getProductInfo());

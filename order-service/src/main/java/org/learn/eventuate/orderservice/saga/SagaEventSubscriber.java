@@ -3,6 +3,7 @@ package org.learn.eventuate.orderservice.saga;
 import io.eventuate.DispatchedEvent;
 import io.eventuate.EventHandlerMethod;
 import io.eventuate.EventSubscriber;
+import org.learn.eventuate.coreapi.OrderCancelledEvent;
 import org.learn.eventuate.coreapi.OrderFiledEvent;
 import org.learn.eventuate.orderservice.domain.event.CompensateSagaEvent;
 import org.learn.eventuate.orderservice.domain.event.InvoiceCompletedEvent;
@@ -35,6 +36,12 @@ public class SagaEventSubscriber {
     public void onOrderFiledEvent(DispatchedEvent<OrderFiledEvent> dispatchedEvent) {
         OrderFiledEvent event = dispatchedEvent.getEvent();
         orderSagaService.startSaga(dispatchedEvent.getEntityId(), event.getProductInfo());
+    }
+
+    @EventHandlerMethod
+    public void onOrderCancelledEvent(DispatchedEvent<OrderCancelledEvent> dispatchedEvent) {
+        OrderCancelledEvent event = dispatchedEvent.getEvent();
+        orderSagaService.cancelSaga(event.getOrderId());
     }
 
     @EventHandlerMethod

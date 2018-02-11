@@ -24,7 +24,7 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
 
     private static final Logger log = LoggerFactory.getLogger(ShipmentAggregate.class);
 
-    public List<Event> process(PrepareShipmentCommand command) {
+    public List<Event> process(PrepareShipmentCommand command) throws InterruptedException {
         id = Util.generateId();
         int price = generatePriceForOrder(command.getOrderSagaInfo());
 
@@ -32,6 +32,8 @@ public class ShipmentAggregate extends ReflectiveMutableCommandProcessingAggrega
         if (orderSagaInfo.getProductInfo().getProductId().equals("failShipment")) {
             return EventUtil.events(new ShipmentPreparationFailedEvent(id, orderSagaInfo.getSagaId(),
                     "this is testing shipment failure stub"));
+        } else if (orderSagaInfo.getProductInfo().getProductId().equals("delayShipment")) {
+            Thread.sleep(30000);
         }
 
         return EventUtil.events(new ShipmentProcessedEvent(id, orderSagaInfo, price));

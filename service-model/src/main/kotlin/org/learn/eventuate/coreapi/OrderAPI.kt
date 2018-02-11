@@ -12,4 +12,5 @@ data class ProductInfo(val productId: String = "", val comment: String = "", val
 interface OrderEvent : Event
 
 data class OrderFiledEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
-class OrderCompletedEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
+data class OrderCompletedEvent(val orderId: String = "", val productInfo: ProductInfo? = null) : OrderEvent
+data class OrderCancelledEvent(val orderId: String = "") : OrderEvent
