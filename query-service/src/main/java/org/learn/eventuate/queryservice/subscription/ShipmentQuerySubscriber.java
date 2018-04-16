@@ -8,6 +8,8 @@ import org.learn.eventuate.coreapi.ShipmentPreparationFailedEvent;
 import org.learn.eventuate.coreapi.ShipmentProcessedEvent;
 import org.learn.eventuate.queryservice.model.Shipment;
 import org.learn.eventuate.queryservice.repository.ShipmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +17,14 @@ import org.springframework.stereotype.Component;
 @EventSubscriber(id = "shipmentQuerySubscriber ")
 public class ShipmentQuerySubscriber {
 
+    private static final Logger log = LoggerFactory.getLogger(ShipmentQuerySubscriber.class);
+
     @Autowired
     private ShipmentRepository shipmentRepository;
 
     @EventHandlerMethod
     public void onShipmentProcessedEvent(DispatchedEvent<ShipmentProcessedEvent> dispatchedEvent) {
+        log.info("on ShipmentProcessedEvent");
         ShipmentProcessedEvent event = dispatchedEvent.getEvent();
         shipmentRepository.save(new Shipment(event.getId(), event.getPrice()));
     }

@@ -58,7 +58,7 @@ public class OrderSagaAggregate extends ReflectiveMutableCommandProcessingAggreg
 
     public List<Event> process(CompleteOrderSagaCommand command) {
         if (orderProcessing.isDone()) {
-            log.info("saga executed successfully");
+            log.info("saga executed successfully -- order " + orderId + ", " + productInfo.getProductId());
             endSaga();
             return EventUtil.events(new OrderSagaComletedEvent(orderId));
         }
