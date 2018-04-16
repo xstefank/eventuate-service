@@ -1,14 +1,14 @@
 version: '3'
 services:
   zookeeper:
-    image: eventuateio/eventuateio-local-zookeeper:0.14.0
+    image: eventuateio/eventuateio-local-zookeeper:0.17.0.RELEASE
     ports:
       - 2181:2181
       - 2888:2888
       - 3888:3888
 
   kafka:
-    image: eventuateio/eventuateio-local-kafka:0.14.0
+    image: eventuateio/eventuateio-local-kafka:0.17.0.RELEASE
     ports:
       - 9092:9092
     links:
@@ -19,7 +19,7 @@ services:
       - ZOOKEEPER_SERVERS=zookeeper:2181
 
   mysql:
-    image: eventuateio/eventuateio-local-mysql:0.14.0
+    image: eventuateio/eventuateio-local-mysql:0.17.0.RELEASE
     ports:
       - 3306:3306
     environment:
@@ -29,7 +29,7 @@ services:
 
 
   cdcservice:
-    image: eventuateio/eventuateio-local-cdc-service:0.14.0
+    image: eventuateio/eventuateio-local-cdc-service:0.17.0.RELEASE
     ports:
       - "8099:8080"
     links:
@@ -127,7 +127,7 @@ services:
         EVENTUATELOCAL_CDC_DB_PASSWORD: rootpassword
 
   consoleserver:
-    image: eventuateio/eventuateio-local-console:0.12.1
+    image: eventuateio/eventuateio-local-console:0.15.0
     links:
       - mysql
       - zookeeper
