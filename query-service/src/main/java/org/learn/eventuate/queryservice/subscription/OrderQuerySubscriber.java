@@ -21,7 +21,7 @@ public class OrderQuerySubscriber {
     private OrderRepository orderRepository;
 
     @EventHandlerMethod
-    public void onOrderFiledEvent(DispatchedEvent<OrderCompletedEvent> dispatchedEvent) {
+    public void onOrderCompletedEvent(DispatchedEvent<OrderCompletedEvent> dispatchedEvent) {
         log.info("on OrderCompletedEvent");
         OrderCompletedEvent event = dispatchedEvent.getEvent();
         orderRepository.save(new Order(event.getOrderId(), event.getProductInfo()));
