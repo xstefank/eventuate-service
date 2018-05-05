@@ -41,7 +41,7 @@ public class InvoiceService {
     }
 
     public void compensateInvoice(ParticipantFailureInfo failureInfo) {
-        if (failureInfo.getId() == "N/A") {
+        if (failureInfo.getId().equals("N/A")) {
             confirmCompensation(failureInfo.getSagaId());
         }
         aggregateRepository.update(failureInfo.getId(), new CompensateInvoiceCommand(failureInfo));

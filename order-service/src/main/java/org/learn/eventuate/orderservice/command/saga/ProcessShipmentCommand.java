@@ -4,7 +4,6 @@ import org.learn.eventuate.coreapi.ShipmentInfo;
 
 public class ProcessShipmentCommand implements OrderSagaCommand {
 
-
     private ShipmentInfo shipmentInfo;
 
     public ProcessShipmentCommand(ShipmentInfo shipmentInfo) {

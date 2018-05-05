@@ -4,8 +4,6 @@ import org.learn.eventuate.coreapi.InvoiceInfo;
 import org.learn.eventuate.coreapi.ParticipantFailureInfo;
 import org.learn.eventuate.coreapi.ShipmentInfo;
 import org.learn.eventuate.orderservice.domain.service.OrderSagaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +16,6 @@ public class OrderSagaController {
 
     @Autowired
     public OrderSagaService orderSagaService;
-    private Logger log = LoggerFactory.getLogger(OrderSagaController.class);
-
 
     @RequestMapping(method = RequestMethod.POST, path = "/shipment")
     public String shipmentResponse(@RequestBody ShipmentInfo shipmentInfo) {
