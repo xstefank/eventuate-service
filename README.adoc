@@ -1,6 +1,6 @@
 = Eventuate-service
 
-Example testing application using eventuate.io framework
+Example testing application using http://eventuate.io/[eventuate.io] framework
 
 == Running
 
@@ -12,7 +12,7 @@ Example testing application using eventuate.io framework
 
 === Stopping
 
-* `docker-compose --remove-orphans`
+ * `docker-compose down --remove-orphans`
 
 == Testing
 
